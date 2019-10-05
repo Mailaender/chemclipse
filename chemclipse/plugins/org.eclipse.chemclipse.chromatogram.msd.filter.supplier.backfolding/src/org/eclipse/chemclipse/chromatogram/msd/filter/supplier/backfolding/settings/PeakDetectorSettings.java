@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2018 Lablicate GmbH.
+ * Copyright (c) 2011, 2019 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -8,6 +8,7 @@
  * 
  * Contributors:
  * Dr. Philip Wenig - initial API and implementation
+ * Dr. Alexander Kerner - implementation
  *******************************************************************************/
 package org.eclipse.chemclipse.chromatogram.msd.filter.supplier.backfolding.settings;
 
@@ -19,27 +20,14 @@ public class PeakDetectorSettings extends AbstractPeakDetectorSettingsMSD {
 
 	@JsonIgnore
 	private IBackfoldingSettings backfoldingSettings;
-	@JsonIgnore
-	private Threshold threshold = Threshold.MEDIUM;
 
 	public PeakDetectorSettings() {
+
 		backfoldingSettings = new BackfoldingSettings();
 	}
 
 	public IBackfoldingSettings getBackfoldingSettings() {
 
 		return backfoldingSettings;
-	}
-
-	public Threshold getThreshold() {
-
-		return threshold;
-	}
-
-	public void setThreshold(Threshold threshold) {
-
-		if(threshold != null) {
-			this.threshold = threshold;
-		}
 	}
 }
