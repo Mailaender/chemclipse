@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_ZuPKQK9dEeK8N6YSg9UECw">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_SQTfcK9lEeK8N6YSg9UECw" featurename="commands" parentElementId="org.eclipse.chemclipse.rcp.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_OlHfkPB6Eeev9sLsv2ZXcQ" elementId="org.eclipse.chemclipse.chromatogram.xxd.edit.supplier.snip.ui.command.filterMassSpectrum" commandName="SNIP Filter Mass Spectrum"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_StsmEK9lEeK8N6YSg9UECw" featurename="handlers" parentElementId="org.eclipse.chemclipse.rcp.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_WKDQoPB6Eeev9sLsv2ZXcQ" elementId="org.eclipse.chemclipse.chromatogram.xxd.edit.supplier.snip.ui.handler.filterMassSpectrum" contributionURI="bundleclass://org.eclipse.chemclipse.chromatogram.xxd.edit.supplier.snip.ui/org.eclipse.chemclipse.chromatogram.xxd.edit.supplier.snip.ui.handlers.FilterHandlerMassSpectrum" command="_OlHfkPB6Eeev9sLsv2ZXcQ"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Aoa-YPB-Eeev9sLsv2ZXcQ" featurename="children" parentElementId="org.eclipse.chemclipse.ux.extension.ui.menu.spectrum.baselinecorrection">
+    <elements xsi:type="menu:HandledMenuItem" xmi:id="_sVeJ8PB6Eeev9sLsv2ZXcQ" elementId="org.eclipse.chemclipse.chromatogram.xxd.edit.supplier.snip.ui.handledmenuitem.filterMassSpectrum" label="SNIP Filter Mass Spectrum" iconURI="platform:/plugin/org.eclipse.chemclipse.rcp.ui.icons/icons/16x16/snipMassSpectrumPeaks.gif" command="_OlHfkPB6Eeev9sLsv2ZXcQ"/>
+  </fragments>
+</fragment:ModelFragments>
