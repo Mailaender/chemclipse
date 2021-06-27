@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, 2024 Lablicate GmbH.
+ * Copyright (c) 2018, 2025 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -7,10 +7,10 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- * Philip Wenig - initial API and implementation
+ * Dr. Philip Wenig - initial API and implementation
  * Christoph Läubrich - rework dirty flag handling
  *******************************************************************************/
-package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.editors;
+package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.editors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,17 +21,17 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core.BatchProcess;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.io.JobWriter;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.model.BatchProcessJob;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.Activator;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ExportRunnable;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
-import org.eclipse.chemclipse.converter.model.ChromatogramInputEntry;
-import org.eclipse.chemclipse.converter.model.IChromatogramInputEntry;
+import org.eclipse.chemclipse.converter.exceptions.FileIsNotWriteableException;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.model.types.DataType;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.core.BatchProcess;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.io.BatchProcessJobWriter;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.model.BatchProcessJob;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.model.IBatchProcessJob;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.model.IMassSpectrumInputEntry;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.model.MassSpectrumInputEntry;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.Activator;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
 import org.eclipse.chemclipse.processing.core.IProcessingInfo;
 import org.eclipse.chemclipse.processing.methods.ProcessMethod;
 import org.eclipse.chemclipse.processing.supplier.IProcessSupplierContext;
@@ -41,12 +41,8 @@ import org.eclipse.chemclipse.xxd.process.support.ProcessTypeSupport;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -58,10 +54,10 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 
 	private static final Logger logger = Logger.getLogger(BatchJobEditor.class);
 
+	private BatchJobUI batchJobUI;
 	private File file;
 	private boolean isDirty = false;
-	private BatchProcessJob batchProcessJob;
-	private BatchJobUI batchJobUI;
+	private IBatchProcessJob batchProcessJob;
 
 	private IProcessSupplierContext supplierContext;
 
@@ -69,9 +65,9 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 	public void doSave(IProgressMonitor monitor) {
 
 		if(file != null) {
+			BatchProcessJobWriter writer = new BatchProcessJobWriter();
 			try {
-				JobWriter writer = new JobWriter();
-				batchProcessJob = getBatchProcessJob(batchJobUI.getDataType());
+				batchProcessJob = getBatchProcessJob();
 				writer.writeBatchProcessJob(file, batchProcessJob, monitor);
 				updateDirtyStatus(false);
 			} catch(FileNotFoundException e) {
@@ -80,6 +76,8 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 				logger.warn(e);
 			} catch(XMLStreamException e) {
 				logger.warn(e);
+			} catch(FileIsNotWriteableException e) {
+				logger.warn(e);
 			}
 		}
 	}
@@ -87,28 +85,7 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 	@Override
 	public void doSaveAs() {
 
-		Display display = Display.getCurrent();
-		Shell shell = display.getActiveShell();
-		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-		dialog.setText("Save the batch job");
-		dialog.setFileName("ChromatogramBatchJob.obj");
-		String fileName = dialog.open();
-		if(fileName != null) {
-			File exportFile = new File(fileName);
-			batchProcessJob = getBatchProcessJob(batchJobUI.getDataType());
-			ExportRunnable runnable = new ExportRunnable(exportFile, batchProcessJob);
-			ProgressMonitorDialog monitor = new ProgressMonitorDialog(shell);
-			try {
-				monitor.run(false, false, runnable);
-				updateDirtyStatus(false);
-			} catch(InvocationTargetException e) {
-				logger.warn(e);
-				logger.warn(e.getCause());
-			} catch(InterruptedException e) {
-				logger.warn(e);
-				Thread.currentThread().interrupt();
-			}
-		}
+		// TODO
 	}
 
 	@Override
@@ -121,20 +98,22 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 		fileName = fileName.substring(0, fileName.length() - 4);
 		setPartName(fileName);
 
-		if(batchProcessJob == null && input instanceof IFileEditorInput fileEditorInput) {
+		if(batchProcessJob == null && input instanceof IFileEditorInput) {
+			IFileEditorInput fileEditorInput = (IFileEditorInput)input;
 			file = fileEditorInput.getFile().getLocation().toFile();
+
 			ImportRunnable runnable = new ImportRunnable(file);
 			ProgressMonitorDialog monitor = new ProgressMonitorDialog(site.getShell());
 			try {
 				monitor.run(false, false, runnable);
 				batchProcessJob = runnable.getBatchProcessJob();
 			} catch(InvocationTargetException e) {
-				throw new PartInitException("The file couldn't be loaded.", e.getTargetException());
+				throw new PartInitException("The file could't be loaded.", e.getTargetException());
 			} catch(InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 		} else {
-			throw new PartInitException("The file couldn't be loaded.");
+			throw new PartInitException("The file could't be loaded.");
 		}
 	}
 
@@ -156,7 +135,7 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 	@Override
 	public boolean isSaveAsAllowed() {
 
-		return false; // enable once the Data Explorer can open .obj
+		return false;
 	}
 
 	@Override
@@ -165,8 +144,7 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 		parent.setLayout(new FillLayout());
 
 		supplierContext = new ProcessTypeSupport();
-		DataType dataType = batchProcessJob.getDataType();
-		batchJobUI = new BatchJobUI(parent, supplierContext, Activator.getDefault().getPreferenceStore(), PreferenceSupplier.P_FILTER_PATH_IMPORT_RECORDS, dataType, this);
+		batchJobUI = new BatchJobUI(parent, supplierContext, Activator.getDefault().getPreferenceStore(), PreferenceSupplier.P_FILTER_PATH_IMPORT_RECORDS, DataType.MALDI, this);
 		batchJobUI.setModificationHandler(this::updateDirtyStatus);
 		batchJobUI.doLoad(getBatchJobFiles(), new ProcessMethod(batchProcessJob.getProcessMethod()));
 	}
@@ -179,34 +157,30 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 
 	private List<File> getBatchJobFiles() {
 
-		List<IChromatogramInputEntry> chromatogramInputEntries = batchProcessJob.getChromatogramInputEntries();
+		List<IMassSpectrumInputEntry> massSpectrumInputEntries = batchProcessJob.getMassSpectrumInputEntries();
 		List<File> files = new ArrayList<>();
-		for(IChromatogramInputEntry entry : chromatogramInputEntries) {
+		for(IMassSpectrumInputEntry entry : massSpectrumInputEntries) {
 			files.add(new File(entry.getInputFile()));
 		}
-		//
+
 		return files;
 	}
 
-	private BatchProcessJob getBatchProcessJob(DataType dataType) {
+	private IBatchProcessJob getBatchProcessJob() {
 
-		BatchProcessJob batchProcessJob = new BatchProcessJob(batchJobUI.getMethod().getProcessMethod());
-		batchProcessJob.setDataType(dataType);
-		//
-		List<IChromatogramInputEntry> entries = batchProcessJob.getChromatogramInputEntries();
+		IBatchProcessJob job = new BatchProcessJob();
+		List<IMassSpectrumInputEntry> entries = job.getMassSpectrumInputEntries();
 		for(File file : batchJobUI.getDataList().getFiles()) {
-			entries.add(new ChromatogramInputEntry(file.getAbsolutePath()));
+			entries.add(new MassSpectrumInputEntry(file.getAbsolutePath()));
 		}
-		//
-		return batchProcessJob;
+		return job;
 	}
 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-		DataType dataType = batchProcessJob.getDataType();
-		BatchProcess batchProcess = new BatchProcess(dataType, supplierContext);
-		IProcessingInfo<?> processingInfo = batchProcess.execute(getBatchProcessJob(dataType), monitor);
+		BatchProcess batchProcess = new BatchProcess();
+		IProcessingInfo<?> processingInfo = batchProcess.execute(getBatchProcessJob(), monitor);
 		ProcessingInfoPartSupport.getInstance().update(processingInfo);
 	}
 }

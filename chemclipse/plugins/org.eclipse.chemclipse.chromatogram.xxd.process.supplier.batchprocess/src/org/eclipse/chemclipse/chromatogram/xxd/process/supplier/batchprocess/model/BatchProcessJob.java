@@ -78,23 +78,30 @@ public class BatchProcessJob {
 	@Override
 	public boolean equals(Object obj) {
 
-		if(this == obj)
+		if(this == obj) {
 			return true;
-		if(obj == null)
+		}
+		if(obj == null) {
 			return false;
-		if(getClass() != obj.getClass())
+		}
+		if(getClass() != obj.getClass()) {
 			return false;
+		}
 		BatchProcessJob other = (BatchProcessJob)obj;
 		if(chromatogramInputEntries == null) {
-			if(other.chromatogramInputEntries != null)
+			if(other.chromatogramInputEntries != null) {
 				return false;
-		} else if(!chromatogramInputEntries.equals(other.chromatogramInputEntries))
+			}
+		} else if(!chromatogramInputEntries.equals(other.chromatogramInputEntries)) {
 			return false;
+		}
 		if(dataType == null) {
-			if(other.dataType != null)
+			if(other.dataType != null) {
 				return false;
-		} else if(!dataType.equals(other.dataType))
+			}
+		} else if(!dataType.equals(other.dataType)) {
 			return false;
+		}
 		return true;
 	}
 }
