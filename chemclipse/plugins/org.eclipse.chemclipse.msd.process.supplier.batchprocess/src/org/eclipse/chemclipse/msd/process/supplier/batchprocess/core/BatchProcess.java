@@ -16,7 +16,6 @@ import java.io.File;
 
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.msd.converter.massspectrum.MassSpectrumConverter;
-import org.eclipse.chemclipse.msd.converter.processing.massspectrum.IMassSpectrumImportConverterProcessingInfo;
 import org.eclipse.chemclipse.msd.model.core.IMassSpectra;
 import org.eclipse.chemclipse.msd.model.core.IScanMSD;
 import org.eclipse.chemclipse.msd.process.supplier.batchprocess.model.IBatchProcessJob;
@@ -43,6 +42,7 @@ public class BatchProcess implements IBatchProcess {
 	private ProcessTypeSupport processTypeSupport;
 
 	public BatchProcess() {
+
 		processTypeSupport = new ProcessTypeSupport();
 	}
 
@@ -77,25 +77,22 @@ public class BatchProcess implements IBatchProcess {
 		return batchProcessingInfo;
 	}
 
-	private IMassSpectra loadMassSpectra(File massSpectrumInputFile, IProcessingInfo batchProcessingInfo, IProgressMonitor monitor) throws TypeCastException {
+	private IMassSpectra loadMassSpectra(File massSpectrumInputFile, IProcessingInfo<IMassSpectra> batchProcessingInfo, IProgressMonitor monitor) throws TypeCastException {
 
-		IMassSpectrumImportConverterProcessingInfo processingInfo = MassSpectrumConverter.convert(massSpectrumInputFile, monitor);
+		IProcessingInfo<IMassSpectra> processingInfo = MassSpectrumConverter.convert(massSpectrumInputFile, monitor);
 		batchProcessingInfo.addMessages(processingInfo);
-		IMassSpectra massSpectra = processingInfo.getMassSpectra();
+		IMassSpectra massSpectra = processingInfo.getProcessingResult();
 		return massSpectra;
 	}
 
-	private void processMassSpectra(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo batchProcessingInfo, IProgressMonitor monitor) {
+	private void processMassSpectra(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo<IMassSpectra> batchProcessingInfo, IProgressMonitor monitor) {
 
-		/*
-		 * The mass spectrum must be not null.
-		 */
 		if(massSpectra != null) {
 			processMassSpectrumEntry(massSpectra, batchProcessJob, batchProcessingInfo, monitor);
 			writeMassSpectrumOutputEntries(massSpectra, batchProcessJob, batchProcessingInfo, monitor);
 			processMassSpectrumReportEntries(massSpectra, batchProcessJob, batchProcessingInfo, monitor);
 		} else {
-			batchProcessingInfo.addErrorMessage(DESCRIPTION, "The chromatogram must be not null.");
+			batchProcessingInfo.addErrorMessage(DESCRIPTION, "The mass spectrum must be not null.");
 		}
 	}
 
@@ -107,7 +104,7 @@ public class BatchProcess implements IBatchProcess {
 	 * @param batchProcessReport
 	 * @param monitor
 	 */
-	private void processMassSpectrumEntry(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo batchProcessingInfo, IProgressMonitor monitor) {
+	private void processMassSpectrumEntry(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo<IMassSpectra> batchProcessingInfo, IProgressMonitor monitor) {
 
 		for(IMassSpectrumProcessEntry processEntry : batchProcessJob.getMassSpectrumProcessEntries()) {
 			for(IScanMSD massSpectrum : massSpectra.getList()) {
@@ -129,12 +126,12 @@ public class BatchProcess implements IBatchProcess {
 	 * @param batchProcessReport
 	 * @param monitor
 	 */
-	private void writeMassSpectrumOutputEntries(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo batchProcessingInfo, IProgressMonitor monitor) {
+	private void writeMassSpectrumOutputEntries(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo<IMassSpectra> batchProcessingInfo, IProgressMonitor monitor) {
 
 		/*
 		 * Write the mass spectrum to each listed output format.
 		 */
-		IProcessingInfo processingInfo = null;
+		IProcessingInfo<IMassSpectra> processingInfo = null;
 		for(IMassSpectrumOutputEntry massSpectrumOutput : batchProcessJob.getMassSpectrumOutputEntries()) {
 			/*
 			 * Append the "/" or "\" to the end of the folder if not exists.
@@ -160,12 +157,12 @@ public class BatchProcess implements IBatchProcess {
 	 * @param batchProcessReport
 	 * @param monitor
 	 */
-	private void processMassSpectrumReportEntries(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo batchProcessingInfo, IProgressMonitor monitor) {
+	private void processMassSpectrumReportEntries(IMassSpectra massSpectra, IBatchProcessJob batchProcessJob, IProcessingInfo<IMassSpectra> batchProcessingInfo, IProgressMonitor monitor) {
 
 		/*
 		 * Report the mass spectrum by each selected report supplier.
 		 */
-		IProcessingInfo processingInfo = null;
+		IProcessingInfo<IMassSpectra> processingInfo = null;
 		for(IMassSpectrumReportSupplierEntry massSpectrumReport : batchProcessJob.getMassSpectrumReportEntries()) {
 			/*
 			 * Append the reports?

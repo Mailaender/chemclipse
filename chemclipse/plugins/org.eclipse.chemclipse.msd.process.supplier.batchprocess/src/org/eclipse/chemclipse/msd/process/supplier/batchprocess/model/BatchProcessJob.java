@@ -15,11 +15,6 @@ package org.eclipse.chemclipse.msd.process.supplier.batchprocess.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chemclipse.converter.model.IChromatogramInputEntry;
-import org.eclipse.chemclipse.converter.model.IChromatogramOutputEntry;
-import org.eclipse.chemclipse.chromatogram.msd.process.model.IChromatogramProcessEntry;
-import org.eclipse.chemclipse.chromatogram.xxd.report.model.IChromatogramReportSupplierEntry;
-
 /**
  * @author Matthias Mailänder
  * 
@@ -35,6 +30,7 @@ public class BatchProcessJob implements IBatchProcessJob {
 	 * Creates a new batch process job.
 	 */
 	public BatchProcessJob() {
+
 		/*
 		 * Why are ArrayLists used here?
 		 * The entries shall be processed in the order the user has chosen them.

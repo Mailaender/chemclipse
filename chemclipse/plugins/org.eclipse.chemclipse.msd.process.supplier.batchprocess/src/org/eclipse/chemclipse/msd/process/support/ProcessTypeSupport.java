@@ -14,7 +14,6 @@ package org.eclipse.chemclipse.msd.process.support;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chemclipse.chromatogram.msd.process.model.IChromatogramProcessEntry;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.msd.model.core.IScanMSD;
 import org.eclipse.chemclipse.msd.process.supplier.BaselineCorrectionTypeSupplier;
@@ -33,6 +32,7 @@ public class ProcessTypeSupport {
 	private List<IProcessTypeSupplier> processTypeSuppliers;
 
 	public ProcessTypeSupport() {
+
 		processTypeSuppliers = new ArrayList<IProcessTypeSupplier>();
 		//
 		processTypeSuppliers.add(new BaselineCorrectionTypeSupplier());
@@ -62,7 +62,7 @@ public class ProcessTypeSupport {
 	 * @param entry
 	 * @return
 	 */
-	public String getProcessorName(IChromatogramProcessEntry entry) {
+	public String getProcessorName(IMassSpectrumProcessEntry entry) {
 
 		return getProcessorName(entry.getProcessCategory(), entry.getProcessorId());
 	}
