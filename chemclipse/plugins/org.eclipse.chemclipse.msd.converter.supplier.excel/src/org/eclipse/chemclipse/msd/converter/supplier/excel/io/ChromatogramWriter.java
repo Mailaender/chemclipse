@@ -27,6 +27,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -103,7 +105,7 @@ public class ChromatogramWriter extends AbstractChromatogramWriter implements IC
 		 * Abundance values
 		 */
 		XSSFCellStyle style1 = excelWorkbook.createCellStyle();
-		style1.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+		style1.setAlignment(HorizontalAlignment.CENTER);
 		style1.setDataFormat(dataFormat.getFormat("0.000"));
 		styles.put(ABUNDANCE_STYLE, style1);
 		/*
