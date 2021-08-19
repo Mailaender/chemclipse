@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.chemclipse.model;bundle-version="0.8.0",
  org.eclipse.chemclipse.support;bundle-version="0.8.0",
  org.eclipse.chemclipse.logging;bundle-version="0.8.0",
- org.eclipse.core.resources;bundle-version="3.11.1"
+ org.eclipse.core.resources;bundle-version="3.11.1",
+ jakarta.xml.bind;bundle-version="2.3.3"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.chemclipse.converter.chromatogram,
