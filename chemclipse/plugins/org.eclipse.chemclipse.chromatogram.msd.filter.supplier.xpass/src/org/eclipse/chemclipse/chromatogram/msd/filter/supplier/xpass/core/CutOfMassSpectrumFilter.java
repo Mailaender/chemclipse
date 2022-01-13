@@ -36,11 +36,11 @@ public class CutOfMassSpectrumFilter extends AbstractMassSpectrumFilter {
 	@Override
 	public IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings massSpectrumFilterSettings, IProgressMonitor monitor) {
 
-		CutOfMassSpectrumFilterSettings settings;
-		if(massSpectrumFilterSettings instanceof CutOfMassSpectrumFilterSettings) {
-			settings = (CutOfMassSpectrumFilterSettings)massSpectrumFilterSettings;
+		CutOffMassSpectrumFilterSettings settings;
+		if(massSpectrumFilterSettings instanceof CutOffMassSpectrumFilterSettings) {
+			settings = (CutOffMassSpectrumFilterSettings)massSpectrumFilterSettings;
 		} else {
-			settings = new CutOfMassSpectrumFilterSettings();
+			settings = new CutOffMassSpectrumFilterSettings();
 		}
 		for(IScanMSD massSpectrum : massSpectra) {
 			List<IIon> ions = new ArrayList<>(massSpectrum.getIons());

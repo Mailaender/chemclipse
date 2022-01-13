@@ -16,7 +16,7 @@ import org.eclipse.chemclipse.support.settings.IntSettingsProperty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CutOfMassSpectrumFilterSettings implements IMassSpectrumFilterSettings {
+public class CutOffMassSpectrumFilterSettings implements IMassSpectrumFilterSettings {
 
 	@JsonProperty(value = "Threshold", defaultValue = "1000")
 	@IntSettingsProperty(minValue = 0)
