@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2019 Lablicate GmbH.
+ * Copyright (c) 2014, 2022 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,12 @@ import java.util.List;
 import org.eclipse.chemclipse.chromatogram.msd.filter.result.IMassSpectrumFilterResult;
 import org.eclipse.chemclipse.chromatogram.msd.filter.settings.IMassSpectrumFilterSettings;
 import org.eclipse.chemclipse.msd.model.core.IScanMSD;
+import org.eclipse.chemclipse.processing.DataCategory;
 import org.eclipse.chemclipse.processing.core.IProcessingInfo;
+import org.eclipse.chemclipse.processing.filter.Filter;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public interface IMassSpectrumFilter {
+public interface IMassSpectrumFilter extends Filter {
 
 	/**
 	 * Applies the filter to the selected mass spectra using the settings.
@@ -31,4 +33,10 @@ public interface IMassSpectrumFilter {
 	 * @return {@link IProcessingInfo}
 	 */
 	IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings massSpectrumFilterSettings, IProgressMonitor monitor);
+
+	@Override
+	default DataCategory[] getDataCategories() {
+
+		return new DataCategory[]{DataCategory.MALDI};
+	}
 }

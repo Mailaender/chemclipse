@@ -28,6 +28,7 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 
 	public static final Set<DataCategory> CHROMATOGRAPHY = Collections.unmodifiableSet(EnumSet.copyOf(Arrays.asList(DataCategory.MSD, DataCategory.CSD, DataCategory.WSD)));
 	public static final Set<DataCategory> NMR = Collections.unmodifiableSet(EnumSet.copyOf(Arrays.asList(DataCategory.FID, DataCategory.NMR)));
+	public static final Set<DataCategory> MS = Collections.unmodifiableSet(EnumSet.copyOf(Arrays.asList(DataCategory.MALDI)));
 	//
 	private final Map<String, String> metadata = new LinkedHashMap<>();
 	private final Set<DataCategory> catgories;

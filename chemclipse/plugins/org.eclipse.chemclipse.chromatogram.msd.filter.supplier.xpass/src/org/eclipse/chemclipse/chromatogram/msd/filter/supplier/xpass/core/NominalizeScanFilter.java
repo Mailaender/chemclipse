@@ -30,6 +30,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class NominalizeScanFilter extends AbstractMassSpectrumFilter {
 
 	private static final String DESCRIPTION = "Nominalize (Unit Mass)";
+	private static final String NAME = "Nominalize";
+
+	@Override
+	public String getName() {
+
+		return NAME;
+	}
 
 	@Override
 	public IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings filterSettings, IProgressMonitor monitor) {
@@ -57,5 +64,11 @@ public class NominalizeScanFilter extends AbstractMassSpectrumFilter {
 		}
 		//
 		return processingInfo;
+	}
+
+	@Override
+	public Class<NominalizeFilterSettings> getConfigClass() {
+
+		return null;
 	}
 }

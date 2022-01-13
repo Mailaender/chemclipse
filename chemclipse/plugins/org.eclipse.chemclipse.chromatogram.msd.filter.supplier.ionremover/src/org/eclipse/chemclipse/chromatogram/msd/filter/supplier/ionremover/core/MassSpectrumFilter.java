@@ -33,6 +33,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class MassSpectrumFilter extends AbstractMassSpectrumFilter {
 
 	private static final String DESCRIPTION = "Ion Remover Mass Spectrum Filter";
+	private static final String NAME = "Ion Remover";
+
+	@Override
+	public String getName() {
+
+		return NAME;
+	}
 
 	@Override
 	public IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings filterSettings, IProgressMonitor monitor) {
@@ -58,5 +65,11 @@ public class MassSpectrumFilter extends AbstractMassSpectrumFilter {
 		}
 		//
 		return processingInfo;
+	}
+
+	@Override
+	public Class<MassSpectrumFilterSettings> getConfigClass() {
+
+		return null;
 	}
 }

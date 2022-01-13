@@ -31,6 +31,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class MassSpectrumFilter extends AbstractMassSpectrumFilter {
 
 	private static final String DESCRIPTION = "Subtract Filter Mass Spectrum";
+	private static final String NAME = "Substract";
+
+	@Override
+	public String getName() {
+
+		return NAME;
+	}
 
 	@Override
 	public IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings filterSettings, IProgressMonitor monitor) {
@@ -53,5 +60,11 @@ public class MassSpectrumFilter extends AbstractMassSpectrumFilter {
 		}
 		//
 		return processingInfo;
+	}
+
+	@Override
+	public Class<MassSpectrumFilterSettings> getConfigClass() {
+
+		return null;
 	}
 }

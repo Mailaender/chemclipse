@@ -30,6 +30,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class LowPassScanFilter extends AbstractMassSpectrumFilter {
 
 	private static final String DESCRIPTION = "Low Pass Ion(s)";
+	private static final String NAME = "Low Pass";
+
+	@Override
+	public String getName() {
+
+		return NAME;
+	}
 
 	@Override
 	public IProcessingInfo<IMassSpectrumFilterResult> applyFilter(List<IScanMSD> massSpectra, IMassSpectrumFilterSettings filterSettings, IProgressMonitor monitor) {
@@ -58,5 +65,11 @@ public class LowPassScanFilter extends AbstractMassSpectrumFilter {
 		}
 		//
 		return processingInfo;
+	}
+
+	@Override
+	public Class<LowPassFilterSettings> getConfigClass() {
+
+		return null;
 	}
 }

@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.chemclipse.chromatogram.msd.filter.core.massspectrum.AbstractMassSpectrumFilter;
 import org.eclipse.chemclipse.chromatogram.msd.filter.result.IMassSpectrumFilterResult;
 import org.eclipse.chemclipse.chromatogram.msd.filter.settings.IMassSpectrumFilterSettings;
-import org.eclipse.chemclipse.chromatogram.msd.filter.supplier.xpass.settings.CutOfMassSpectrumFilterSettings;
+import org.eclipse.chemclipse.chromatogram.msd.filter.supplier.xpass.settings.CutOffMassSpectrumFilterSettings;
 import org.eclipse.chemclipse.msd.model.core.IIon;
 import org.eclipse.chemclipse.msd.model.core.IScanMSD;
 import org.eclipse.chemclipse.processing.core.IProcessingInfo;
@@ -25,7 +25,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class CutOfMassSpectrumFilter extends AbstractMassSpectrumFilter {
 
-	public CutOfMassSpectrumFilter() {
+	private static final String NAME = "Cut High/Low";
+
+	@Override
+	public String getName() {
+
+		return NAME;
 	}
 
 	@Override
@@ -46,6 +51,12 @@ public class CutOfMassSpectrumFilter extends AbstractMassSpectrumFilter {
 				}
 			}
 		}
+		return null;
+	}
+
+	@Override
+	public Class<CutOffMassSpectrumFilterSettings> getConfigClass() {
+
 		return null;
 	}
 }
