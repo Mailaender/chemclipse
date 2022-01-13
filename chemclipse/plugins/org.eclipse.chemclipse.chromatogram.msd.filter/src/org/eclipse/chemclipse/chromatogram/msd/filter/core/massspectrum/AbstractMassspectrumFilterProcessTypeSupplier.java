@@ -52,7 +52,7 @@ public abstract class AbstractMassspectrumFilterProcessTypeSupplier implements I
 
 		try {
 			IMassSpectrumFilterSupport filterSupport = MassSpectrumFilter.getMassSpectrumFilterSupport();
-			List<IProcessSupplier<?>> list = new ArrayList<IProcessSupplier<?>>();
+			List<IProcessSupplier<?>> list = new ArrayList<>();
 			for(String id : filterSupport.getAvailableFilterIds()) {
 				list.add(new MassSpectrumFilterProcessorSupplier(prefix, filterSupport.getFilterSupplier(id), extractionFunction, this));
 			}
