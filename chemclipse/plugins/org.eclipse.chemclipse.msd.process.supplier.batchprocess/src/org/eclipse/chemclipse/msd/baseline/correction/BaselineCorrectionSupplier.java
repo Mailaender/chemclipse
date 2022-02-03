@@ -12,6 +12,7 @@
 package org.eclipse.chemclipse.msd.baseline.correction;
 
 import org.eclipse.chemclipse.chromatogram.xxd.baseline.detector.core.IBaselineDetectorSupplier;
+import org.eclipse.chemclipse.chromatogram.xxd.baseline.detector.settings.IBaselineDetectorSettings;
 
 public class BaselineCorrectionSupplier implements IBaselineDetectorSupplier {
 
@@ -112,4 +113,10 @@ public class BaselineCorrectionSupplier implements IBaselineDetectorSupplier {
 		return builder.toString();
 	}
 	// ------------------------------------hashCode, equals, toString
+
+	@Override
+	public Class<? extends IBaselineDetectorSettings> getSettingsClass() {
+
+		return null;
+	}
 }
