@@ -101,16 +101,6 @@ public class FilteredMeasurement<FilteredType extends IMeasurement, ConfigType> 
 	}
 
 	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-
-		if(measurement.getClass().isAssignableFrom(adapter)) {
-			// if we can cast the filtered object itself we return it here, that way a filtered object can always be adapted to itself
-			return adapter.cast(measurement);
-		}
-		return measurement.getAdapter(adapter);
-	}
-
-	@Override
 	public FilterContext<FilteredType, ConfigType> getFilterContext() {
 
 		return context;

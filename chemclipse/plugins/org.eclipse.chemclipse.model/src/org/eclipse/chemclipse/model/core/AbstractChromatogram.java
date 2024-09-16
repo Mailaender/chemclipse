@@ -43,7 +43,6 @@ import org.eclipse.chemclipse.model.updates.IChromatogramUpdateListener;
 import org.eclipse.chemclipse.support.history.EditHistory;
 import org.eclipse.chemclipse.support.history.IEditHistory;
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
 public abstract class AbstractChromatogram<T extends IPeak> extends AbstractMeasurementTarget implements IChromatogram<T> {
@@ -480,13 +479,6 @@ public abstract class AbstractChromatogram<T extends IPeak> extends AbstractMeas
 		}
 		//
 		list.addAll(scans);
-	}
-
-	@Override
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public Object getAdapter(Class adapter) {
-
-		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	@Override

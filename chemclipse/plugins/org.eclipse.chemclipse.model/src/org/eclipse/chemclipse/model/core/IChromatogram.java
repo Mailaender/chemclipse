@@ -25,9 +25,8 @@ import org.eclipse.chemclipse.model.support.IScanRange;
 import org.eclipse.chemclipse.model.targets.ITargetDisplaySettings;
 import org.eclipse.chemclipse.model.updates.IUpdater;
 import org.eclipse.chemclipse.support.history.ISupplierEditHistory;
-import org.eclipse.core.runtime.IAdaptable;
 
-public interface IChromatogram<T extends IPeak> extends SegmentedMeasurement, IMeasurement, IChromatogramOverview, IAdaptable, IChromatogramPeaks<T>, ISupplierEditHistory, IChromatogramBaseline, IUpdater, IChromatogramIntegrationSupport, IChromatogramProcessorSupport, ITargetSupplier, ITargetDisplaySettings {
+public interface IChromatogram<T extends IPeak> extends SegmentedMeasurement, IMeasurement, IChromatogramOverview, IChromatogramPeaks<T>, ISupplierEditHistory, IChromatogramBaseline, IUpdater, IChromatogramIntegrationSupport, IChromatogramProcessorSupport, ITargetSupplier, ITargetDisplaySettings {
 
 	String DEFAULT_CHROMATOGRAM_NAME = "Chromatogram";
 	int MIN_SCANDELAY = 0;

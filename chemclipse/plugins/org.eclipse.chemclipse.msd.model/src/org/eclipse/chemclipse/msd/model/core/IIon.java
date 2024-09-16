@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.chemclipse.msd.model.core;
 
-import org.eclipse.core.runtime.IAdaptable;
-
 /**
  * This Interface declares a simple ion.<br/>
  * For example:<br/>
@@ -37,7 +35,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * @author Philip Wenig
  * @author Alexander Kerner
  */
-public interface IIon extends IIonSerializable, IAdaptable, Comparable<IIon> {
+public interface IIon extends IIonSerializable, Comparable<IIon> {
 
 	String TIC_DESCRIPTION = "TIC";
 	double TIC_ION = 0.0d;

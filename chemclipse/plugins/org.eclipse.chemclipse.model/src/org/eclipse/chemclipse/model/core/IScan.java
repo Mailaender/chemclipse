@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2022 Lablicate GmbH.
+ * Copyright (c) 2012, 2024 Lablicate GmbH.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.eclipse.chemclipse.model.columns.SeparationColumnType;
-import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * A chromatogram consists of several scans. There are several detector methods like:
@@ -31,7 +30,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * Or it could be a chromatogram containing subsequent scans too.
  * 
  */
-public interface IScan extends ISignal, IAdaptable, Serializable, ITargetSupplier {
+public interface IScan extends ISignal, Serializable, ITargetSupplier {
 
 	/**
 	 * Returns the chromatogram, where the mass spectrum is stored.<br/>
