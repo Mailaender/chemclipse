@@ -24,6 +24,9 @@ public class MassSpectrumPeak implements IMassSpectrumPeak {
 	private double mz;
 	private double intensity;
 	private double sn;
+	private double fwhm;
+	private double baseline;
+	private int charge;
 	private final Set<String> classifier = new LinkedHashSet<>();
 	private Set<IIdentificationTarget> identificationTargets = new HashSet<>();
 
@@ -87,5 +90,41 @@ public class MassSpectrumPeak implements IMassSpectrumPeak {
 	public void removeClassifier(String classifier) {
 
 		this.classifier.remove(classifier);
+	}
+
+	@Override
+	public double getFWHM() {
+
+		return fwhm;
+	}
+
+	@Override
+	public void setFWHM(double fwhm) {
+
+		this.fwhm = fwhm;
+	}
+
+	@Override
+	public double getBaseline() {
+
+		return baseline;
+	}
+
+	@Override
+	public void setBaseline(double baseline) {
+
+		this.baseline = baseline;
+	}
+
+	@Override
+	public int getCharge() {
+
+		return charge;
+	}
+
+	@Override
+	public void setCharge(int charge) {
+
+		this.charge = charge;
 	}
 }

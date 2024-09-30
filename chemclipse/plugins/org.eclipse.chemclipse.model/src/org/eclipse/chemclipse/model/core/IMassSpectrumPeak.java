@@ -31,10 +31,25 @@ public interface IMassSpectrumPeak extends ISpectrumPeak {
 
 	/**
 	 * 
-	 * 
 	 * @return s/n
 	 */
 	double getSignalToNoise();
 
 	void setSignalToNoise(double sn);
+
+	/**
+	 * 
+	 * @return full width at half maximum
+	 */
+	double getFWHM();
+
+	void setFWHM(double fwhm);
+
+	double getBaseline();
+
+	void setBaseline(double baseline);
+
+	int getCharge();
+
+	void setCharge(int charge);
 }
