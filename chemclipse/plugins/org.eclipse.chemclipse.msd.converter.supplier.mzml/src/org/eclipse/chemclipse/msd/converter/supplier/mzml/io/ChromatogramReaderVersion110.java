@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.chemclipse.converter.io.AbstractChromatogramReader;
 import org.eclipse.chemclipse.converter.l10n.ConverterMessages;
 import org.eclipse.chemclipse.logging.core.Logger;
+import org.eclipse.chemclipse.model.baseline.IBaselineModel;
 import org.eclipse.chemclipse.model.core.IChromatogramOverview;
 import org.eclipse.chemclipse.msd.converter.io.IChromatogramMSDReader;
 import org.eclipse.chemclipse.msd.converter.supplier.mzml.converter.model.IVendorChromatogram;
@@ -134,9 +135,44 @@ public class ChromatogramReaderVersion110 extends AbstractChromatogramReader imp
 			}
 			setRetentionTime(spectrum, massSpectrum);
 			readIons(spectrum, massSpectrum, chromatogram);
+			readBaseline(spectrum, massSpectrum, chromatogram);
 			chromatogram.addScan(massSpectrum);
 			monitor.worked(1);
 		}
+	}
+
+	private void readBaseline(SpectrumType spectrum, IRegularMassSpectrum massSpectrum, IChromatogramMSD chromatogram) {
+
+		for(BinaryDataArrayType binaryDataArrayType : spectrum.getBinaryDataArrayList().getBinaryDataArray()) {
+			boolean compressed = false;
+			boolean doublePrecision = false;
+			float multiplicator = 1f;
+			for(CVParamType cvParam : binaryDataArrayType.getCvParam()) {
+				if(cvParam.getAccession().equals("MS:1000574") && cvParam.getName().equals("zlib compression")) {
+					compressed = true;
+				}
+				if(cvParam.getAccession().equals("MS:1000521") && cvParam.getName().equals("32-bit float")) {
+					doublePrecision = false;
+				} else if(cvParam.getAccession().equals("MS:1000523") && cvParam.getName().equals("64-bit float")) {
+					doublePrecision = true;
+				}
+				if(cvParam.getAccession().equals("MS:1002745") && cvParam.getName().equals("sampled noise baseline array")) {
+					try {
+						byte[] binary = binaryDataArrayType.getBinary();
+						double[] values = BinaryReader110.getValues(binary, compressed, doublePrecision, multiplicator);
+						IBaselineModel baselineModel = chromatogram.getBaselineModel();
+						int rt = massSpectrum.getRetentionTime();
+						for(int i = 1; i < values.length; i++) {
+							System.out.println(values[i]);
+							baselineModel.addBaseline(rt, rt + i, (float)values[i - 1], (float)values[i], false);
+						}
+					} catch(DataFormatException e) {
+						logger.warn(e);
+					}
+				}
+			}
+		}
+		chromatogram.setActiveBaselineDefault();
 	}
 
 	private void setRetentionTime(SpectrumType spectrum, IRegularMassSpectrum massSpectrum) {

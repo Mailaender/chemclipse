@@ -32,16 +32,14 @@ public class BinaryReader110 {
 
 	public static Pair<String, double[]> parseBinaryData(BinaryDataArrayType binaryDataArrayType) throws DataFormatException {
 
-		double[] values = new double[0];
 		String content = "";
 		if(binaryDataArrayType.getArrayLength() == BigInteger.ZERO) {
-			return new ImmutablePair<>(content, values);
+			return new ImmutablePair<>(content, new double[0]);
 		}
 		byte[] binary = binaryDataArrayType.getBinary();
 		if(binary == null) {
-			return new ImmutablePair<>(content, values);
+			return new ImmutablePair<>(content, new double[0]);
 		}
-		ByteBuffer byteBuffer = ByteBuffer.wrap(binary);
 		boolean compressed = false;
 		boolean doublePrecision = false;
 		float multiplicator = 1f;
@@ -65,6 +63,14 @@ public class BinaryReader110 {
 				multiplicator = XmlReader110.getTimeMultiplicator(cvParam);
 			}
 		}
+		double[] values = getValues(binary, compressed, doublePrecision, multiplicator);
+		return new ImmutablePair<>(content, values);
+	}
+
+	public static double[] getValues(byte[] binary, boolean compressed, boolean doublePrecision, float multiplicator) throws DataFormatException {
+
+		double[] values = new double[0];
+		ByteBuffer byteBuffer = ByteBuffer.wrap(binary);
 		if(compressed) {
 			Inflater inflater = new Inflater();
 			inflater.setInput(byteBuffer.array());
@@ -86,6 +92,6 @@ public class BinaryReader110 {
 				values[index] = Double.valueOf(floatBuffer.get(index)) * multiplicator;
 			}
 		}
-		return new ImmutablePair<>(content, values);
+		return values;
 	}
 }
