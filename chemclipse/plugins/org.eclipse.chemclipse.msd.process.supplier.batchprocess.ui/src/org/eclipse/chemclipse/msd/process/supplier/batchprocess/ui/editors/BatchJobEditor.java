@@ -10,7 +10,7 @@
  * Philip Wenig - initial API and implementation
  * Christoph Läubrich - rework dirty flag handling
  *******************************************************************************/
-package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.editors;
+package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.editors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,11 +23,11 @@ import javax.xml.stream.XMLStreamException;
 
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core.BatchProcess;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.Activator;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ExportRunnable;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.model.types.DataType;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.Activator;
 import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
 import org.eclipse.chemclipse.process.supplier.batchprocess.io.BatchInputEntry;
 import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessInputEntry;

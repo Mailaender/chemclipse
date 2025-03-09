@@ -12,7 +12,7 @@
 package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.preferences;
 
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.Activator;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.Activator;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
