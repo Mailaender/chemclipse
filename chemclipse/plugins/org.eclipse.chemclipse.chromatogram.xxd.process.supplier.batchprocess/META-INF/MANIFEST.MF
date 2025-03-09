@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess
 Bundle-ManifestVersion: 2
-Bundle-Name: Batch Process
+Bundle-Name: Chromatogram Batch Process
 Bundle-SymbolicName: org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess
 Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.Activator
@@ -21,11 +21,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.chemclipse.converter;bundle-version="0.8.0",
  org.eclipse.chemclipse.model;bundle-version="0.8.0",
  org.eclipse.chemclipse.rcp.app;bundle-version="0.8.0",
- org.eclipse.chemclipse.support;bundle-version="0.8.0"
+ org.eclipse.chemclipse.support;bundle-version="0.8.0",
+ org.eclipse.chemclipse.process.supplier.batchprocess;bundle-version="0.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: ChemClipse
 Export-Package: org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core,
- org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.io,
- org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.model,
  org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences
 Bundle-ActivationPolicy: lazy

@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core;
 
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.model.BatchProcessJob;
-import org.eclipse.chemclipse.converter.model.IChromatogramInputEntry;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.model.exceptions.ChromatogramIsNullException;
 import org.eclipse.chemclipse.model.selection.IChromatogramSelection;
 import org.eclipse.chemclipse.model.supplier.IChromatogramSelectionProcessSupplier;
 import org.eclipse.chemclipse.model.types.DataType;
+import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessInputEntry;
 import org.eclipse.chemclipse.processing.core.IProcessingInfo;
 import org.eclipse.chemclipse.processing.core.ProcessingInfo;
 import org.eclipse.chemclipse.processing.core.exceptions.TypeCastException;
@@ -53,7 +53,7 @@ public class BatchProcess {
 			processingInfo.addErrorMessage(DESCRIPTION, "The batch job and/or process method was null.");
 		} else {
 			IProcessMethod processMethod = batchProcessJob.getProcessMethod();
-			for(IChromatogramInputEntry chromatogramInput : batchProcessJob.getChromatogramInputEntries()) {
+			for(IBatchProcessInputEntry chromatogramInput : batchProcessJob.getBatchProcessInputEntries()) {
 				String file = chromatogramInput.getInputFile();
 				try {
 					IProcessingInfo<IChromatogramSelection> processingInfoX = chromatogramTypeSupport.getChromatogramSelection(file, monitor);

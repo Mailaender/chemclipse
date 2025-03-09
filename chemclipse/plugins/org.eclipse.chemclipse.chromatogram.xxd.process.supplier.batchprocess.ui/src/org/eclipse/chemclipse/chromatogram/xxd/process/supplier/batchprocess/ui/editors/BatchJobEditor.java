@@ -22,16 +22,16 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core.BatchProcess;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.io.JobWriter;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.model.BatchProcessJob;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.Activator;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ExportRunnable;
 import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
-import org.eclipse.chemclipse.converter.model.ChromatogramInputEntry;
-import org.eclipse.chemclipse.converter.model.IChromatogramInputEntry;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.model.types.DataType;
+import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.BatchInputEntry;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessInputEntry;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.JobWriter;
 import org.eclipse.chemclipse.processing.core.IProcessingInfo;
 import org.eclipse.chemclipse.processing.methods.ProcessMethod;
 import org.eclipse.chemclipse.processing.supplier.IProcessSupplierContext;
@@ -179,12 +179,12 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 
 	private List<File> getBatchJobFiles() {
 
-		List<IChromatogramInputEntry> chromatogramInputEntries = batchProcessJob.getChromatogramInputEntries();
+		List<IBatchProcessInputEntry> chromatogramInputEntries = batchProcessJob.getBatchProcessInputEntries();
 		List<File> files = new ArrayList<>();
-		for(IChromatogramInputEntry entry : chromatogramInputEntries) {
+		for(IBatchProcessInputEntry entry : chromatogramInputEntries) {
 			files.add(new File(entry.getInputFile()));
 		}
-		//
+
 		return files;
 	}
 
@@ -192,12 +192,12 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 
 		BatchProcessJob batchProcessJob = new BatchProcessJob(batchJobUI.getMethod().getProcessMethod());
 		batchProcessJob.setDataType(dataType);
-		//
-		List<IChromatogramInputEntry> entries = batchProcessJob.getChromatogramInputEntries();
+
+		List<IBatchProcessInputEntry> entries = batchProcessJob.getBatchProcessInputEntries();
 		for(File file : batchJobUI.getDataList().getFiles()) {
-			entries.add(new ChromatogramInputEntry(file.getAbsolutePath()));
+			entries.add(new BatchInputEntry(file.getAbsolutePath()));
 		}
-		//
+
 		return batchProcessJob;
 	}
 

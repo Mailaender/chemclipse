@@ -30,7 +30,7 @@ public enum DataType implements ILabel {
 	SCAN_WSD("Wavelength Selective Scan (UV/Vis)"), //
 	SCAN_FSD("Fluorescence Spectroscopy Scan (FS)"), //
 	TSD("Time Selective Data (GC-IMS, GCxGC, ..)"), //
-	NMR("Nuclear Magnetic Resonance"), //
+	NMR("Nuclear Magnetic Resonance (NMR) Spectroscopy"), //
 	CAL("Retention Index Calibration"), //
 	PCR("Polymerase Chain Reaction"), //
 	SEQ("Sequences"), //

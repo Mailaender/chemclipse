@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2018 Lablicate GmbH.
+ * Copyright (c) 2010, 2022 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -8,7 +8,6 @@
  * 
  * Contributors:
  * Dr. Philip Wenig - initial API and implementation
- * Matthias Mailänder - initial API and implementation
  *******************************************************************************/
 package org.eclipse.chemclipse.msd.process.supplier.batchprocess;
 

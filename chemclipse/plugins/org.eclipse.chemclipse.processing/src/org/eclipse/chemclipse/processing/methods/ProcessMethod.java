@@ -30,6 +30,7 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 
 	public static final Set<DataCategory> CHROMATOGRAPHY = Collections.unmodifiableSet(Set.of(DataCategory.chromatographyCategories()));
 	public static final Set<DataCategory> NMR = Collections.unmodifiableSet(Set.of(DataCategory.spectroscopyCategories()));
+	public static final Set<DataCategory> MS = Collections.unmodifiableSet(Set.of(DataCategory.spectrometryCategories()));
 	//
 	private static final Logger logger = Logger.getLogger(ProcessMethod.class);
 	//

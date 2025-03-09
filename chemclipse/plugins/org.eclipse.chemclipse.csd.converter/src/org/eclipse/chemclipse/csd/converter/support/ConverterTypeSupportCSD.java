@@ -12,9 +12,9 @@
 package org.eclipse.chemclipse.csd.converter.support;
 
 import org.eclipse.chemclipse.converter.exceptions.NoConverterAvailableException;
-import org.eclipse.chemclipse.converter.model.IChromatogramOutputEntry;
 import org.eclipse.chemclipse.csd.converter.chromatogram.ChromatogramConverterCSD;
 import org.eclipse.chemclipse.logging.core.Logger;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessOutputEntry;
 import org.eclipse.chemclipse.processing.converter.ISupplier;
 
 // TODO merge with Converter Plug-in
@@ -23,7 +23,7 @@ public class ConverterTypeSupportCSD {
 	private static final Logger logger = Logger.getLogger(ConverterTypeSupportCSD.class);
 	public static final String NOT_AVAILABLE = "n.a.";
 
-	public String getConverterName(IChromatogramOutputEntry entry) {
+	public String getConverterName(IBatchProcessOutputEntry entry) {
 
 		String converterName = NOT_AVAILABLE;
 		try {

@@ -12,8 +12,8 @@
 package org.eclipse.chemclipse.wsd.converter.support;
 
 import org.eclipse.chemclipse.converter.exceptions.NoConverterAvailableException;
-import org.eclipse.chemclipse.converter.model.IChromatogramOutputEntry;
 import org.eclipse.chemclipse.logging.core.Logger;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessOutputEntry;
 import org.eclipse.chemclipse.processing.converter.ISupplier;
 import org.eclipse.chemclipse.wsd.converter.chromatogram.ChromatogramConverterWSD;
 
@@ -23,7 +23,7 @@ public class ConverterTypeSupportWSD {
 	private static final Logger logger = Logger.getLogger(ConverterTypeSupportWSD.class);
 	public static final String NOT_AVAILABLE = "n.a.";
 
-	public String getConverterName(IChromatogramOutputEntry entry) {
+	public String getConverterName(IBatchProcessOutputEntry entry) {
 
 		String converterName = NOT_AVAILABLE;
 		try {
