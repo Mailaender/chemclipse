@@ -336,4 +336,8 @@
          id="org.eclipse.chemclipse.msd.process.supplier.batchprocess.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.chemclipse.msd.process.supplier.batchprocess.feature"
+         version="0.0.0"/>
+
 </feature>

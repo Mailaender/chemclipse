@@ -9,37 +9,33 @@
  * Contributors:
  * Dr. Philip Wenig - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables;
+package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.internal.runnables;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
-import org.eclipse.chemclipse.process.supplier.batchprocess.io.JobReader;
+import org.eclipse.chemclipse.process.supplier.batchprocess.io.JobWriter;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-public class ImportRunnable implements IRunnableWithProgress {
+public class ExportRunnable implements IRunnableWithProgress {
 
 	private File file;
-	private BatchProcessJob batchProcessJob = null;
+	private BatchProcessJob batchProcessJob;
 
-	public ImportRunnable(File file) {
+	public ExportRunnable(File file, BatchProcessJob batchProcessJob) {
 
 		this.file = file;
-	}
-
-	public BatchProcessJob getBatchProcessJob() {
-
-		return batchProcessJob;
+		this.batchProcessJob = batchProcessJob;
 	}
 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 		try {
-			JobReader jobReader = new JobReader();
-			batchProcessJob = jobReader.read(file, monitor);
+			JobWriter jobWriter = new JobWriter();
+			jobWriter.writeBatchProcessJob(file, batchProcessJob, monitor);
 		} catch(Exception e) {
 			throw new InterruptedException("Failed to process the file: " + file.getPath() + ".");
 		}

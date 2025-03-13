@@ -9,7 +9,7 @@
  * Contributors:
  * Philip Wenig - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.wizards;
+package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.wizards;
 
 import org.eclipse.chemclipse.model.types.DataType;
 import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;

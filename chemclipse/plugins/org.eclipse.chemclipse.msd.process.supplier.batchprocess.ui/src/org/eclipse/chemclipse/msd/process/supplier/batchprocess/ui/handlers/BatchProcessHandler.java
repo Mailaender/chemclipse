@@ -9,9 +9,9 @@
  * Contributors:
  * Dr. Philip Wenig - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.handlers;
+package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.handlers;
 
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.wizards.WizardProcessor;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.wizards.WizardProcessor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;

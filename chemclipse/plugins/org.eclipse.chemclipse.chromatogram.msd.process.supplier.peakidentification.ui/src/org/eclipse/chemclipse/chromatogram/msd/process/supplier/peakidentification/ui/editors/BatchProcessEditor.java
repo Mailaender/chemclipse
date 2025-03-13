@@ -55,7 +55,7 @@ public class BatchProcessEditor extends MultiPageEditorPart {
 	 * Pages.
 	 */
 	private BatchProcessEditorPage batchProcessEditorPage;
-	private List<IMultiEditorPage> pages = new ArrayList<IMultiEditorPage>();
+	private List<IMultiEditorPage> pages = new ArrayList<>();
 	/*
 	 * Indices of the pages.
 	 */
@@ -66,7 +66,7 @@ public class BatchProcessEditor extends MultiPageEditorPart {
 	/*
 	 * Store the indices of the pages.
 	 */
-	private HashMap<String, Integer> pagesMap = new HashMap<String, Integer>();
+	private HashMap<String, Integer> pagesMap = new HashMap<>();
 
 	/**
 	 * Sets the active page.

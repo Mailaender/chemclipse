@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2022 Lablicate GmbH.
+ * Copyright (c) 2010, 2025 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui;
 
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.preferences.PreferenceSupplier;
 import org.eclipse.chemclipse.support.ui.activator.AbstractActivatorUI;
 import org.osgi.framework.BundleContext;
 
@@ -22,6 +22,7 @@ public class Activator extends AbstractActivatorUI {
 
 	private static Activator plugin;
 
+	@Override
 	public void start(BundleContext context) throws Exception {
 
 		super.start(context);
@@ -29,6 +30,7 @@ public class Activator extends AbstractActivatorUI {
 		initializePreferenceStore(PreferenceSupplier.INSTANCE());
 	}
 
+	@Override
 	public void stop(BundleContext context) throws Exception {
 
 		plugin = null;
