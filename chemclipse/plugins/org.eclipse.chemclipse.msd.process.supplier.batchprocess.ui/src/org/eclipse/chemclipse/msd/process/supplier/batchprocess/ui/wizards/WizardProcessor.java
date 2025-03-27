@@ -12,6 +12,7 @@
 package org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.wizards;
 
 import org.eclipse.chemclipse.logging.core.Logger;
+import org.eclipse.chemclipse.model.types.DataType;
 import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
 import org.eclipse.chemclipse.process.supplier.batchprocess.io.JobWriter;
 import org.eclipse.chemclipse.processing.methods.ProcessMethod;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class WizardProcessor extends AbstractFileWizard {
 
 	private static final Logger logger = Logger.getLogger(WizardProcessor.class);
-	private PageDataType pageDataType;
 
 	public WizardProcessor() {
 
@@ -34,16 +34,13 @@ public class WizardProcessor extends AbstractFileWizard {
 	public void addPages() {
 
 		super.addPages();
-		//
-		pageDataType = new PageDataType();
-		addPage(pageDataType);
 	}
 
 	@Override
 	public void doFinish(IProgressMonitor monitor) throws CoreException {
 
 		final IFile file = super.prepareProject(monitor);
-		//
+
 		try {
 			/*
 			 * Create the project.
@@ -64,7 +61,7 @@ public class WizardProcessor extends AbstractFileWizard {
 
 		ProcessMethod processMethod = new ProcessMethod(ProcessMethod.MS);
 		BatchProcessJob batchProcessJob = new BatchProcessJob(processMethod);
-		batchProcessJob.setDataType(pageDataType.getDataType());
+		batchProcessJob.setDataType(DataType.MALDI);
 
 		return batchProcessJob;
 	}

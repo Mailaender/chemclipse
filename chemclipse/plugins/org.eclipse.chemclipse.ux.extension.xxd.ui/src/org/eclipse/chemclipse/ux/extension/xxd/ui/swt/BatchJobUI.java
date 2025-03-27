@@ -52,9 +52,9 @@ public class BatchJobUI {
 	private DataCategory dataCategory;
 	private IRunnableWithProgress executionRunnable;
 
-	public BatchJobUI(Composite parent, IProcessSupplierContext processingSupport, IPreferenceStore preferenceStore, String userlocationPrefrenceKey, DataType dataType, IRunnableWithProgress executionRunnable) {
+	public BatchJobUI(Composite parent, IProcessSupplierContext processingSupport, IPreferenceStore preferenceStore, String userlocationPreferenceKey, DataType dataType, IRunnableWithProgress executionRunnable) {
 
-		this(parent, processingSupport, preferenceStore, userlocationPrefrenceKey, DataType.convert(new DataType[]{dataType})[0], executionRunnable);
+		this(parent, processingSupport, preferenceStore, userlocationPreferenceKey, DataType.convert(new DataType[]{dataType})[0], executionRunnable);
 	}
 
 	public BatchJobUI(Composite parent, IProcessSupplierContext processingSupport, IPreferenceStore preferenceStore, String userLocationPreferenceKey, DataCategory dataCategory, IRunnableWithProgress executionRunnable) {
@@ -64,7 +64,7 @@ public class BatchJobUI {
 		this.userLocationPreferenceKey = userLocationPreferenceKey;
 		this.dataCategory = dataCategory;
 		this.executionRunnable = executionRunnable;
-		//
+
 		composite = createControl(parent);
 	}
 
@@ -123,12 +123,12 @@ public class BatchJobUI {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, true));
-		//
+
 		createToolBar(composite);
-		//
+
 		dataListUI = createDataListUI(composite);
 		extendedMethodUI = createExtendedMethodUI(composite);
-		//
+
 		return composite;
 	}
 
@@ -139,10 +139,10 @@ public class BatchJobUI {
 		gridData.horizontalAlignment = SWT.END;
 		gridData.horizontalSpan = 2;
 		toolBar.setLayoutData(gridData);
-		//
+
 		createLabelInfo(toolBar);
 		createButtonExecute(toolBar, executionRunnable);
-		//
+
 		return toolBar;
 	}
 
@@ -151,7 +151,7 @@ public class BatchJobUI {
 		DataListUI dataListUI = createDataList(parent, preferenceStore, userLocationPreferenceKey, dataCategory);
 		dataListUI.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		dataListUI.getConfig().setToolbarVisible(false);
-		//
+
 		return dataListUI;
 	}
 
@@ -162,7 +162,7 @@ public class BatchJobUI {
 		extendedMethodUI.setToolbarHeaderVisible(false);
 		extendedMethodUI.setToolbarMainVisible(false);
 		extendedMethodUI.setModificationHandler(this::setEditorDirty);
-		//
+
 		return extendedMethodUI;
 	}
 
@@ -173,7 +173,7 @@ public class BatchJobUI {
 		toolItem.setToolTipText("The following data types are active.");
 		toolItem.setImage(ApplicationImageFactory.getInstance().getImage(IApplicationImage.IMAGE_INFO, IApplicationImage.SIZE_16x16));
 		toolItem.setEnabled(false);
-		//
+
 		return toolItem;
 	}
 
@@ -182,7 +182,7 @@ public class BatchJobUI {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Data Types: ");
 		builder.append(dataCategory.name());
-		//
+
 		return builder.toString();
 	}
 
@@ -192,7 +192,7 @@ public class BatchJobUI {
 		toolItem.setText("Execute");
 		toolItem.setToolTipText("Execute the batch job.");
 		toolItem.setImage(ApplicationImageFactory.getInstance().getImage(IApplicationImage.IMAGE_EXECUTE, IApplicationImage.SIZE_16x16));
-		//
+
 		toolItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override

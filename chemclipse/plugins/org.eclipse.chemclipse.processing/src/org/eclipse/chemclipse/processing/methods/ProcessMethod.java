@@ -31,12 +31,12 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 	public static final Set<DataCategory> CHROMATOGRAPHY = Collections.unmodifiableSet(Set.of(DataCategory.chromatographyCategories()));
 	public static final Set<DataCategory> NMR = Collections.unmodifiableSet(Set.of(DataCategory.spectroscopyCategories()));
 	public static final Set<DataCategory> MS = Collections.unmodifiableSet(Set.of(DataCategory.spectrometryCategories()));
-	//
+
 	private static final Logger logger = Logger.getLogger(ProcessMethod.class);
-	//
+
 	private final Map<String, String> metadata = new LinkedHashMap<>();
 	private final Set<DataCategory> catgories;
-	//
+
 	private String uuid = "";
 	private String operator = "";
 	private String category = "";
@@ -98,7 +98,7 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 		if(operator == null) {
 			return "";
 		}
-		//
+
 		return operator;
 	}
 
@@ -117,7 +117,7 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 			}
 			return "";
 		}
-		//
+
 		return name;
 	}
 
@@ -127,11 +127,11 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 		if(category == null || category.isEmpty()) {
 			return "";
 		}
-		//
+
 		if(resourceBundle == null) {
 			return category;
 		}
-		//
+
 		try {
 			return resourceBundle.getString(category);
 		} catch(MissingResourceException e) {
@@ -191,7 +191,7 @@ public class ProcessMethod extends ListProcessEntryContainer implements IProcess
 		if(isFinal()) {
 			return Collections.unmodifiableMap(metadata);
 		}
-		//
+
 		return metadata;
 	}
 }

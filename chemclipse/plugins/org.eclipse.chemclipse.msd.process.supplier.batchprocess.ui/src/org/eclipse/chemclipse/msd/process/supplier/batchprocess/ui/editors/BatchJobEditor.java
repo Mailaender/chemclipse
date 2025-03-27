@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, 2024 Lablicate GmbH.
+ * Copyright (c) 2018, 2025 Lablicate GmbH.
  * 
  * All rights reserved.
  * This program and the accompanying materials are made available under the
@@ -21,13 +21,13 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.core.BatchProcess;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.preferences.PreferenceSupplier;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ExportRunnable;
-import org.eclipse.chemclipse.chromatogram.xxd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
 import org.eclipse.chemclipse.logging.core.Logger;
 import org.eclipse.chemclipse.model.types.DataType;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.core.BatchProcess;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.preferences.PreferenceSupplier;
 import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.Activator;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.internal.runnables.ExportRunnable;
+import org.eclipse.chemclipse.msd.process.supplier.batchprocess.ui.internal.runnables.ImportRunnable;
 import org.eclipse.chemclipse.process.supplier.batchprocess.core.BatchProcessJob;
 import org.eclipse.chemclipse.process.supplier.batchprocess.io.BatchInputEntry;
 import org.eclipse.chemclipse.process.supplier.batchprocess.io.IBatchProcessInputEntry;
@@ -184,7 +184,7 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 		for(IBatchProcessInputEntry entry : chromatogramInputEntries) {
 			files.add(new File(entry.getInputFile()));
 		}
-		//
+
 		return files;
 	}
 
@@ -192,7 +192,7 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 
 		BatchProcessJob batchProcessJob = new BatchProcessJob(batchJobUI.getMethod().getProcessMethod());
 		batchProcessJob.setDataType(dataType);
-		//
+
 		List<IBatchProcessInputEntry> entries = batchProcessJob.getBatchProcessInputEntries();
 		for(File file : batchJobUI.getDataList().getFiles()) {
 			entries.add(new BatchInputEntry(file.getAbsolutePath()));
@@ -204,8 +204,8 @@ public class BatchJobEditor extends EditorPart implements IRunnableWithProgress 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
+		BatchProcess batchProcess = new BatchProcess(supplierContext);
 		DataType dataType = batchProcessJob.getDataType();
-		BatchProcess batchProcess = new BatchProcess(dataType, supplierContext);
 		IProcessingInfo<?> processingInfo = batchProcess.execute(getBatchProcessJob(dataType), monitor);
 		ProcessingInfoPartSupport.getInstance().update(processingInfo);
 	}

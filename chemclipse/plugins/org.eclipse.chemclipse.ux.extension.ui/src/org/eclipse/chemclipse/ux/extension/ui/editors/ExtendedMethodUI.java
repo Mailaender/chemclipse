@@ -59,11 +59,11 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 	private static final String TOOLTIP_HEADER = "the header information.";
 	private static final String IMAGE_PROFILE = IApplicationImage.IMAGE_INSTRUMENT;
 	private static final String TOOLTIP_PROFILE = "the profile selection.";
-	//
+
 	private final IProcessSupplierContext processingSupport;
 	private final DataCategory[] dataCategories;
 	private final BiFunction<IProcessEntry, IProcessSupplierContext, IProcessorPreferences<?>> preferencesSupplier;
-	//
+
 	private AtomicReference<Composite> toolbarMain = new AtomicReference<>();
 	private AtomicReference<Button> buttonToolbarHeader = new AtomicReference<>();
 	private AtomicReference<ProcessMethodHeader> toolbarHeader = new AtomicReference<>();
@@ -71,11 +71,11 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 	private AtomicReference<ProcessMethodProfiles> toolbarProfile = new AtomicReference<>();
 	private AtomicReference<MethodTreeViewer> treeViewer = new AtomicReference<>();
 	private AtomicReference<ProcessMethodToolbar> toolbarButtons = new AtomicReference<>();
-	//
+
 	private ProcessMethod processMethod;
 	private IModificationHandler modificationHandler;
 	private Collection<ProcessEntryContainer> postActions;
-	//
+
 	private boolean readOnly = false;
 
 	public ExtendedMethodUI(Composite parent, int style, IProcessSupplierContext processingSupport, DataCategory[] dataCategories) {
@@ -86,12 +86,12 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 	public ExtendedMethodUI(Composite parent, int style, IProcessSupplierContext processingSupport, BiFunction<IProcessEntry, IProcessSupplierContext, IProcessorPreferences<?>> preferencesSupplier, DataCategory[] dataCategories) {
 
 		super(parent, style);
-		//
+
 		this.readOnly = (style & SWT.READ_ONLY) != 0;
 		this.processingSupport = processingSupport;
 		this.preferencesSupplier = preferencesSupplier;
 		this.dataCategories = dataCategories;
-		//
+
 		createControl();
 	}
 
@@ -104,11 +104,11 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 
 		this.postActions = postActions;
 		this.processMethod = new ProcessMethod(processMethod);
-		//
+
 		toolbarHeader.get().setInput(this.processMethod);
 		toolbarProfile.get().setInput(this.processMethod);
 		toolbarButtons.get().setInput(this.processMethod);
-		//
+
 		updateProcessMethod();
 	}
 
@@ -126,16 +126,16 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 	private void createControl() {
 
 		setLayout(new FillLayout());
-		//
+
 		Composite composite = new Composite(this, SWT.NONE);
 		composite.setLayout(new GridLayout(1, true));
-		//
+
 		createToolbarMain(composite);
 		createToolbarHeader(composite);
 		createToolbarProfile(composite);
 		createTreeViewer(composite);
 		createToolbarBottom(composite);
-		//
+
 		initialize();
 	}
 
@@ -173,11 +173,11 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 		gridData.horizontalAlignment = SWT.END;
 		composite.setLayoutData(gridData);
 		composite.setLayout(new GridLayout(3, false));
-		//
+
 		createButtonToggleHeader(composite);
 		createButtonToggleProfile(composite);
 		createSettingsButton(composite);
-		//
+
 		toolbarMain.set(composite);
 	}
 
@@ -215,7 +215,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 		ProcessMethodHeader processMethodHeader = new ProcessMethodHeader(parent, SWT.NONE);
 		processMethodHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		processMethodHeader.setProcessingSupport(processingSupport);
-		//
+
 		processMethodHeader.setUpdateListener(new IUpdateListener() {
 
 			@Override
@@ -224,7 +224,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 				updateProcessMethod();
 			}
 		});
-		//
+
 		processMethodHeader.setModificationHandler(new IModificationHandler() {
 
 			@Override
@@ -233,7 +233,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 				setMethodDirty(dirty);
 			}
 		});
-		//
+
 		toolbarHeader.set(processMethodHeader);
 	}
 
@@ -241,7 +241,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 
 		ProcessMethodProfiles processMethodProfiles = new ProcessMethodProfiles(parent, SWT.NONE);
 		processMethodProfiles.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//
+
 		processMethodProfiles.setUpdateListener(new IUpdateListener() {
 
 			@Override
@@ -251,7 +251,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 				setMethodDirty(true);
 			}
 		});
-		//
+
 		toolbarProfile.set(processMethodProfiles);
 	}
 
@@ -268,7 +268,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 				setMethodDirty(true);
 			}
 		});
-		//
+
 		methodTreeViewer.getTree().addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -288,7 +288,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 				}
 			}
 		});
-		//
+
 		treeViewer.set(methodTreeViewer);
 	}
 
@@ -298,7 +298,7 @@ public class ExtendedMethodUI extends Composite implements IExtendedPartUI {
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalAlignment = SWT.END;
 		processMethodToolbar.setLayoutData(gridData);
-		//
+
 		processMethodToolbar.setStructuredViewer(treeViewer.get());
 		processMethodToolbar.setProcessingSupport(processingSupport);
 		processMethodToolbar.setPreferencesSupplier(preferencesSupplier);

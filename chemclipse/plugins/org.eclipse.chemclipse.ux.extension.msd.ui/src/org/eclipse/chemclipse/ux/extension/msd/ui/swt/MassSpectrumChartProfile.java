@@ -214,7 +214,7 @@ public class MassSpectrumChartProfile extends LineChart implements IMassSpectrum
 			return false;
 		}
 
-		return supplier.getCategory() == ICategories.MASS_SPECTRUM_FILTER;
+		return supplier.getCategory().equals(ICategories.MASS_SPECTRUM_FILTER);
 	}
 
 	private void addCommand(IProcessSupplier<?> supplier, IChartMenuEntry cachedEntry) {

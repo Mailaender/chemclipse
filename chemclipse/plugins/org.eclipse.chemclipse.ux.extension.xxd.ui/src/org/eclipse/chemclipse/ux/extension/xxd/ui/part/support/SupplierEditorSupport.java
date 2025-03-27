@@ -142,7 +142,7 @@ public class SupplierEditorSupport extends AbstractSupplierFileEditorSupport imp
 			default:
 				// No action
 		}
-		//
+
 		return supplier;
 	}
 

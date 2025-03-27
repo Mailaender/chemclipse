@@ -33,7 +33,7 @@ public class BatchProcess {
 
 	private static final Logger logger = Logger.getLogger(BatchProcess.class);
 	private static final String DESCRIPTION = "Batch Processor";
-	//
+
 	private final ChromatogramTypeSupport chromatogramTypeSupport;
 	private final IProcessSupplierContext processSupplierContext;
 
@@ -68,11 +68,11 @@ public class BatchProcess {
 						}
 						processingInfo.addMessages(processorResult);
 					} else {
-						processingInfo.addErrorMessage(DESCRIPTION, "Failure to process: " + file);
+						processingInfo.addErrorMessage(DESCRIPTION, "Failure to process chromatogram: " + file);
 					}
 				} catch(TypeCastException e) {
 					logger.warn(e);
-					processingInfo.addErrorMessage(DESCRIPTION, "Failure to process: " + file);
+					processingInfo.addErrorMessage(DESCRIPTION, "Failure to process chromatogram: " + file);
 				} catch(ChromatogramIsNullException e) {
 					logger.error(e);
 					processingInfo.addErrorMessage(DESCRIPTION, "Chromatogram is empty: " + file);
