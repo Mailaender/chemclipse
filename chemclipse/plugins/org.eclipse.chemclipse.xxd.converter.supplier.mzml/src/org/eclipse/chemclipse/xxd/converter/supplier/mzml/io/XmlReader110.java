@@ -14,6 +14,7 @@ package org.eclipse.chemclipse.xxd.converter.supplier.mzml.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,7 +47,20 @@ public class XmlReader110 {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.parse(file);
 		NodeList topNode = document.getElementsByTagName("mzML");
-		//
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		return (MzMLType)unmarshaller.unmarshal(topNode.item(0));
+	}
+
+	public static MzMLType getMzML(InputStream inputStream) throws SAXException, IOException, JAXBException, ParserConfigurationException {
+
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.parse(inputStream);
+		NodeList topNode = document.getElementsByTagName("mzML");
+
 		JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		return (MzMLType)unmarshaller.unmarshal(topNode.item(0));
