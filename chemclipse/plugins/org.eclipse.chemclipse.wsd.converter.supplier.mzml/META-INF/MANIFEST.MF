@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: org.eclipse.chemclipse.wsd.converter.supplier.arw
+Automatic-Module-Name: org.eclipse.chemclipse.wsd.converter.supplier.mzml
 Eclipse-RegisterBuddy: 	org.eclipse.chemclipse.model, org.eclipse.chemclipse.wsd.model
 Export-Package: org.eclipse.chemclipse.wsd.converter.supplier.mzml.preferences
 Bundle-ManifestVersion: 2
