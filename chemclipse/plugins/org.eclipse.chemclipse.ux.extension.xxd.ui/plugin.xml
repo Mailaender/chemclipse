@@ -9,6 +9,14 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+   <extension point="org.eclipse.ui.views">
+  	<view
+  		name="Data Navigator"
+  		icon="icons/16x16/chromatogram.gif"
+  		class="org.eclipse.chemclipse.ux.extension.xxd.ui.parts.DataNavigator"
+  		id="org.eclipse.chemclipse.DataNavigator">
+  	</view>
+   </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
