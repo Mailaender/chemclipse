@@ -1,28 +1,18 @@
 package org.eclipse.chemclipse.ux.extension.xxd.ui.parts;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.common.CommandException;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Adapters;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IAggregateWorkingSet;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
@@ -30,56 +20,23 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISaveablesSource;
 import org.eclipse.ui.ISecondarySaveableSource;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchCommandConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.Saveable;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.ui.actions.CloseResourceAction;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.DefaultSaveable;
 import org.eclipse.ui.internal.navigator.NavigatorPlugin;
 import org.eclipse.ui.internal.navigator.filters.UserFilter;
 import org.eclipse.ui.internal.views.helpers.EmptyWorkspaceHelper;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.navigator.INavigatorContentService;
 import org.eclipse.ui.views.WorkbenchViewerSetup;
 
-/**
- *
- * @see CommonNavigator
- * @see INavigatorContentService
- * @since 3.2
- */
 @SuppressWarnings("restriction")
 public final class DataNavigator extends CommonNavigator implements ISecondarySaveableSource {
 
-	/**
-	 * Provides a constant for the standard instance of the Common Navigator.
-	 *
-	 * @see PlatformUI#getWorkbench()
-	 * @see IWorkbench#getActiveWorkbenchWindow()
-	 * @see IWorkbenchWindow#getActivePage()
-	 *
-	 * @see IWorkbenchPage#findView(String)
-	 * @see IWorkbenchPage#findViewReference(String)
-	 */
 	public static final String VIEW_ID = IPageLayout.ID_PROJECT_EXPLORER;
 
-	/**
-	 * @since 3.4
-	 */
 	public static final int WORKING_SETS = 0;
-
-	/**
-	 * @since 3.4
-	 */
 	public static final int PROJECTS = 1;
 
 	private static final String MEMENTO_REGEXP_FILTER_ELEMENT = "regexpFilter"; //$NON-NLS-1$
@@ -88,14 +45,19 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 
 	private int rootMode;
 
-	/**
-	 * Used only in the case of top level = PROJECTS and only when some working sets
-	 * are selected.
-	 */
 	private String workingSetLabel;
 
 	private List<UserFilter> userFilters;
 	private EmptyWorkspaceHelper emptyWorkspaceHelper;
+
+	/**
+	 * TODO: Replace this with a preference / product property.
+	 * For now: use user.home as a "root folder".
+	 */
+	private File getRootFolder() {
+
+		return new File(System.getProperty("user.home"));
+	}
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -137,10 +99,20 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 		Composite displayAreas = emptyWorkspaceHelper.getComposite(aParent);
 
 		super.createPartControl(displayAreas);
-		getCommonViewer().setMapper(new ResourceToItemsMapper(getCommonViewer()));
-		getCommonViewer().setData(NavigatorPlugin.RESOURCE_REGEXP_FILTER_DATA, this.userFilters);
+
+		CommonViewer viewer = getCommonViewer();
+		viewer.setData(NavigatorPlugin.RESOURCE_REGEXP_FILTER_DATA, this.userFilters);
+
+		// IMPORTANT: replace Project Explorer model with filesystem model
+		viewer.setContentProvider(new FileTreeContentProvider());
+		viewer.setLabelProvider(new FileLabelProvider());
+
+		File root = getRootFolder();
+		viewer.setInput(root);
+		setContentDescription(root.getAbsolutePath());
+
 		if(this.userFilters.stream().anyMatch(UserFilter::isEnabled)) {
-			getCommonViewer().refresh();
+			viewer.refresh();
 		}
 	}
 
@@ -148,14 +120,8 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 	protected ActionGroup createCommonActionGroup() {
 
 		return super.createCommonActionGroup();
-		// return new ProjectExplorerActionGroup(this, getCommonViewer(), getLinkHelperService());
 	}
 
-	/**
-	 * The superclass does not deal with the content description, handle it here.
-	 *
-	 * @noreference This method is not intended to be referenced by clients.
-	 */
 	@Override
 	public void updateTitle() {
 
@@ -167,162 +133,22 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 			return;
 		}
 
-		if(!(input instanceof IResource res)) {
-			String label = ((ILabelProvider)getCommonViewer().getLabelProvider()).getText(input);
-			if(label != null) {
-				setContentDescription(label);
-				return;
-			}
-			IWorkbenchAdapter wbadapter = Adapters.adapt(input, IWorkbenchAdapter.class);
-			if(wbadapter != null) {
-				setContentDescription(wbadapter.getLabel(input));
-				return;
-			}
-			setContentDescription(input.toString());
+		if(input instanceof File f) {
+			setContentDescription(f.getAbsolutePath());
 			return;
 		}
 
-		setContentDescription(res.getName());
-	}
-
-	/**
-	 * Returns the tool tip text for the given element.
-	 *
-	 * @param element
-	 *            the element
-	 * @return the tooltip
-	 * @noreference This method is not intended to be referenced by clients.
-	 */
-	@Override
-	public String getFrameToolTipText(Object element) {
-
-		String result;
-		if(!(element instanceof IResource)) {
-			if(element instanceof IAggregateWorkingSet) {
-				result = "TODO";// WorkbenchNavigatorMessages.ProjectExplorerPart_workingSetModel;
-			} else if(element instanceof IWorkingSet) {
-				result = ((IWorkingSet)element).getLabel();
-			} else {
-				result = super.getFrameToolTipText(element);
-			}
-		} else {
-			IPath path = ((IResource)element).getFullPath();
-			if(path.isRoot()) {
-				result = "TODO"; // WorkbenchNavigatorMessages.ProjectExplorerPart_workspace;
-			} else {
-				result = path.makeRelative().toString();
-			}
+		if(!(input instanceof org.eclipse.core.resources.IResource)) {
+			String label = ((ILabelProvider)getCommonViewer().getLabelProvider()).getText(input);
+			setContentDescription(label != null ? label : String.valueOf(input));
+			return;
 		}
-
-		if(rootMode == PROJECTS) {
-			if(workingSetLabel == null) {
-				return result;
-			}
-			if(result.isEmpty()) {
-				// return NLS.bind(WorkbenchNavigatorMessages.ProjectExplorer_toolTip, new String[]{workingSetLabel});
-				return "is Empty";
-			}
-			return result;// NLS.bind(WorkbenchNavigatorMessages.ProjectExplorer_toolTip2, new String[]{result, workingSetLabel});
-		}
-
-		// Working set mode. During initialization element and viewer can
-		// be null.
-		if(element != null && !(element instanceof IWorkingSet) && getCommonViewer() != null) {
-			/*
-			 * FrameList frameList = getCommonViewer().getFrameList();
-			 * // Happens during initialization
-			 * if(frameList == null) {
-			 * return result;
-			 * }
-			 * int index = frameList.getCurrentIndex();
-			 * IWorkingSet ws = null;
-			 * while(index >= 0) {
-			 * Frame frame = frameList.getFrame(index);
-			 * if(frame instanceof TreeFrame) {
-			 * Object input = ((TreeFrame)frame).getInput();
-			 * if(input instanceof IWorkingSet && !(input instanceof IAggregateWorkingSet)) {
-			 * ws = (IWorkingSet)input;
-			 * break;
-			 * }
-			 * }
-			 * index--;
-			 * }
-			 * if(ws != null) {
-			 * return ws.getLabel() + result;
-			 * // return NLS.bind(WorkbenchNavigatorMessages.ProjectExplorer_toolTip3, new String[]{ws.getLabel(), result});
-			 * }
-			 * return result;
-			 */
-		}
-		return result;
-
-	}
-
-	/**
-	 * @param mode
-	 *            root mode to set
-	 * @noreference This method is not intended to be referenced by clients.
-	 * @since 3.4
-	 */
-	@Override
-	public void setRootMode(int mode) {
-
-		rootMode = mode;
-	}
-
-	/**
-	 * @return the root mode
-	 * @noreference This method is not intended to be referenced by clients.
-	 * @since 3.4
-	 */
-	@Override
-	public int getRootMode() {
-
-		return rootMode;
-	}
-
-	/**
-	 * @param label
-	 *            working set label
-	 * @noreference This method is not intended to be referenced by clients.
-	 * @since 3.4
-	 */
-	@Override
-	public void setWorkingSetLabel(String label) {
-
-		workingSetLabel = label;
-	}
-
-	/**
-	 * @return the working set label
-	 * @noreference This method is not intended to be referenced by clients.
-	 * @since 3.4
-	 */
-	@Override
-	public String getWorkingSetLabel() {
-
-		return workingSetLabel;
 	}
 
 	@Override
 	protected void handleDoubleClick(DoubleClickEvent anEvent) {
 
-		ICommandService commandService = getViewSite().getService(ICommandService.class);
-		Command openProjectCommand = commandService.getCommand(IWorkbenchCommandConstants.PROJECT_OPEN_PROJECT);
-		if(openProjectCommand != null && openProjectCommand.isHandled() && openProjectCommand.isEnabled()) {
-			IStructuredSelection selection = (IStructuredSelection)anEvent.getSelection();
-			Object element = selection.getFirstElement();
-			if(element instanceof IProject && !((IProject)element).isOpen()) {
-				try {
-					openProjectCommand.executeWithChecks(new ExecutionEvent());
-				} catch(CommandException ex) {
-					// IStatus status = WorkbenchNavigatorPlugin.createErrorStatus("'Open Project' failed", ex); //$NON-NLS-1$
-					// WorkbenchNavigatorPlugin.getDefault().getLog().log(status);
-					ex.printStackTrace();
-				}
-				return;
-			}
-		}
+		// TODO
 		super.handleDoubleClick(anEvent);
 	}
 
@@ -357,7 +183,7 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 
 	private IEditorPart getActiveEditor() {
 
-		IWorkbenchPage page = getSite().getPage();
+		var page = getSite().getPage();
 		return page != null ? page.getActiveEditor() : null;
 	}
 
@@ -368,35 +194,89 @@ public final class DataNavigator extends CommonNavigator implements ISecondarySa
 	}
 
 	@Override
-	protected void initListeners(TreeViewer viewer) {
+	public void setRootMode(int mode) {
 
-		super.initListeners(viewer);
+		rootMode = mode;
+	}
 
-		viewer.getControl().addMouseListener(new MouseAdapter() {
+	@Override
+	public int getRootMode() {
 
-			@Override
-			public void mouseUp(MouseEvent event) {
+		return rootMode;
+	}
 
-				SafeRunner.run(() -> {
-					handleMiddleClick(event);
-				});
+	@Override
+	public void setWorkingSetLabel(String label) {
+
+		workingSetLabel = label;
+	}
+
+	@Override
+	public String getWorkingSetLabel() {
+
+		return workingSetLabel;
+	}
+
+	private static final class FileTreeContentProvider implements ITreeContentProvider {
+
+		@Override
+		public Object[] getElements(Object inputElement) {
+
+			return getChildren(inputElement);
+		}
+
+		@Override
+		public Object[] getChildren(Object parentElement) {
+
+			if(!(parentElement instanceof File f) || !f.isDirectory()) {
+				return new Object[0];
+			}
+			File[] children = f.listFiles();
+			if(children == null) {
+				return new Object[0];
 			}
 
-			private void handleMiddleClick(MouseEvent event) {
+			// Sort: directories first, then files; alphabetically
+			Arrays.sort(children, Comparator.comparing((File x) -> !x.isDirectory()).thenComparing(File::getName, String.CASE_INSENSITIVE_ORDER));
 
-				if(event.button == 2 && event.widget instanceof Tree) {
-					TreeItem item = ((Tree)event.widget).getItem(new Point(event.x, event.y));
-					if(item == null) {
-						return;
-					}
-					Object data = item.getData();
-					if(data instanceof IProject project) {
-						CloseResourceAction cra = new CloseResourceAction(() -> null);
-						cra.selectionChanged(new StructuredSelection(project));
-						cra.run();
-					}
-				}
+			return children;
+		}
+
+		@Override
+		public Object getParent(Object element) {
+
+			return (element instanceof File f) ? f.getParentFile() : null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+
+			return (element instanceof File f) && f.isDirectory() && f.listFiles() != null && f.listFiles().length > 0;
+		}
+
+		@Override
+		public void dispose() {
+
+			// nothing
+		}
+
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+			// nothing
+		}
+	}
+
+	private static final class FileLabelProvider extends LabelProvider {
+
+		@Override
+		public String getText(Object element) {
+
+			if(element instanceof File f) {
+				String name = f.getName();
+				return (name == null || name.isBlank()) ? f.getAbsolutePath() : name;
 			}
-		});
+			return super.getText(element);
+		}
 	}
 }
