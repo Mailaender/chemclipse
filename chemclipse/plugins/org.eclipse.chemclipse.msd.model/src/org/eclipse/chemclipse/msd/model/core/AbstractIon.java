@@ -14,7 +14,6 @@
 package org.eclipse.chemclipse.msd.model.core;
 
 import org.eclipse.chemclipse.model.math.IonRoundMethod;
-import org.eclipse.core.runtime.Adapters;
 
 /**
  * All ions implement the interface Serializable to enable an
@@ -166,12 +165,6 @@ public abstract class AbstractIon implements IIon {
 	public int compareTo(IIon other) {
 
 		return (int)(this.ion - other.getIon());
-	}
-
-	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-
-		return Adapters.adapt(this, adapter);
 	}
 
 	@Override
