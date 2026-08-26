@@ -12,7 +12,7 @@
  * Christoph Läubrich - make more generic useable
  * Matthias Mailänder - display the metrics of the identification algorithm
  *******************************************************************************/
-package org.eclipse.chemclipse.ux.extension.xxd.ui.swt;
+package org.eclipse.chemclipse.ux.extension.ui.targets;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,13 +25,6 @@ import org.eclipse.chemclipse.support.ui.swt.IRecordTableComparator;
 import org.eclipse.chemclipse.support.updates.IUpdateListener;
 import org.eclipse.chemclipse.swt.ui.support.Colors;
 import org.eclipse.chemclipse.ux.extension.ui.provider.TargetListFilter;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsColumns;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsComparator;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsEditingSupport;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsLabelProvider;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferenceSupplier;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -55,6 +48,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 	private Integer retentionTime = null;
 	private Float retentionIndex = null;
 
+	private ITargetsTableSettings settings = new TargetsTableSettings();
 	private TargetsColumns targetsColumns = null;
 	private boolean dynamicColumns = false;
 	private boolean editingSupport = false;
@@ -81,6 +75,16 @@ public class TargetsListUI extends ExtendedTableViewer {
 	public void setUpdateListener(IUpdateListener updateListener) {
 
 		this.updateListener = updateListener;
+	}
+
+	public void setSettings(ITargetsTableSettings settings) {
+
+		this.settings = settings;
+		labelProvider.setSettings(settings);
+		setCellColorProvider();
+		if(getInput() != null) {
+			refresh();
+		}
 	}
 
 	public void updateContent() {
@@ -219,20 +223,15 @@ public class TargetsListUI extends ExtendedTableViewer {
 							int retentionTimeTarget = libraryInformation.getRetentionTime();
 
 							if(retentionTime != null && retentionTimeTarget != 0) {
-								IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-								boolean useAbsoluteDeviation = preferenceStore.getBoolean(PreferenceSupplier.P_USE_ABSOLUTE_DEVIATION_RETENTION_TIME);
+								boolean useAbsoluteDeviation = settings.isUseAbsoluteDeviationRetentionTime();
 								double deviation;
-								double deviationWarn;
-								double deviationError;
+								double deviationWarn = settings.getRetentionTimeDeviationOK(useAbsoluteDeviation);
+								double deviationError = settings.getRetentionTimeDeviationWarn(useAbsoluteDeviation);
 
 								if(useAbsoluteDeviation) {
 									deviation = Math.abs(retentionTime - retentionTimeTarget);
-									deviationWarn = preferenceStore.getInt(PreferenceSupplier.P_RETENTION_TIME_DEVIATION_ABS_OK);
-									deviationError = preferenceStore.getInt(PreferenceSupplier.P_RETENTION_TIME_DEVIATION_ABS_WARN);
 								} else {
 									deviation = (Math.abs(retentionTime - retentionTimeTarget) / retentionTimeTarget) * 100.0d;
-									deviationWarn = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_TIME_DEVIATION_REL_OK);
-									deviationError = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_TIME_DEVIATION_REL_WARN);
 								}
 
 								if(deviation < deviationWarn) {
@@ -247,7 +246,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 								}
 							}
 
-							String text = TargetsLabelProvider.getRetentionTimeText(libraryInformation, retentionTime);
+							String text = TargetsLabelProvider.getRetentionTimeText(libraryInformation, retentionTime, settings);
 							cell.setText(text);
 							super.update(cell);
 						}
@@ -273,20 +272,15 @@ public class TargetsListUI extends ExtendedTableViewer {
 							float retentionIndexTarget = libraryInformation.getRetentionIndex();
 
 							if(retentionIndex != null && retentionIndexTarget != 0) {
-								IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-								boolean useAbsoluteDeviation = preferenceStore.getBoolean(PreferenceSupplier.P_USE_ABSOLUTE_DEVIATION_RETENTION_INDEX);
+								boolean useAbsoluteDeviation = settings.isUseAbsoluteDeviationRetentionIndex();
 								double deviation;
-								double deviationWarn;
-								double deviationError;
+								double deviationWarn = settings.getRetentionIndexDeviationOK(useAbsoluteDeviation);
+								double deviationError = settings.getRetentionIndexDeviationWarn(useAbsoluteDeviation);
 
 								if(useAbsoluteDeviation) {
 									deviation = Math.abs(retentionIndex - retentionIndexTarget);
-									deviationWarn = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_INDEX_DEVIATION_ABS_OK);
-									deviationError = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_INDEX_DEVIATION_ABS_WARN);
 								} else {
 									deviation = (Math.abs(retentionIndex - retentionIndexTarget) / retentionIndexTarget) * 100.0d;
-									deviationWarn = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_INDEX_DEVIATION_REL_OK);
-									deviationError = preferenceStore.getFloat(PreferenceSupplier.P_RETENTION_INDEX_DEVIATION_REL_WARN);
 								}
 
 								if(deviation < deviationWarn) {
@@ -301,7 +295,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 								}
 							}
 
-							String text = TargetsLabelProvider.getRetentionIndexText(libraryInformation, retentionIndex);
+							String text = TargetsLabelProvider.getRetentionIndexText(libraryInformation, retentionIndex, settings);
 							cell.setText(text);
 							super.update(cell);
 						}

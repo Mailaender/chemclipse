@@ -11,7 +11,7 @@
  * Philip Wenig - initial API and implementation
  * Matthias Mailänder - display the metrics of the identification algorithm
  *******************************************************************************/
-package org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider;
+package org.eclipse.chemclipse.ux.extension.ui.targets;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -23,16 +23,14 @@ import org.eclipse.chemclipse.model.identifier.IComparisonMetric;
 import org.eclipse.chemclipse.model.identifier.IComparisonResult;
 import org.eclipse.chemclipse.model.identifier.IIdentificationTarget;
 import org.eclipse.chemclipse.model.identifier.ILibraryInformation;
+import org.eclipse.chemclipse.model.preferences.PreferenceSupplier;
 import org.eclipse.chemclipse.model.support.DatabaseResolver;
 import org.eclipse.chemclipse.rcp.ui.icons.core.ApplicationImageFactory;
 import org.eclipse.chemclipse.rcp.ui.icons.core.IApplicationImage;
 import org.eclipse.chemclipse.rcp.ui.icons.core.IApplicationImageProvider;
 import org.eclipse.chemclipse.support.text.ValueFormat;
 import org.eclipse.chemclipse.support.ui.provider.AbstractChemClipseLabelProvider;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.l10n.ExtensionMessages;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferenceSupplier;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.chemclipse.ux.extension.ui.l10n.ExtensionMessages;
 import org.eclipse.swt.graphics.Image;
 
 public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
@@ -66,7 +64,7 @@ public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
 	public static final String NCBI_TAXONOMY = "NCBI Taxonomy ID";
 	public static final String GENBANK_ACCESSION = "GenBank Accession";
 
-	private static final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+	private ITargetsTableSettings settings = new TargetsTableSettings();
 
 	public static final String[] TITLES = TargetsColumns.create(null).getTitles();
 	public static final int[] BOUNDS = TargetsColumns.create(null).getBounds();
@@ -79,12 +77,17 @@ public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
 		this.targetsColumns = targetsColumns;
 	}
 
-	public static String getRetentionTimeText(ILibraryInformation libraryInformation, Integer retentionTime) {
+	public void setSettings(ITargetsTableSettings settings) {
+
+		this.settings = settings;
+	}
+
+	public static String getRetentionTimeText(ILibraryInformation libraryInformation, Integer retentionTime, ITargetsTableSettings settings) {
 
 		DecimalFormat decimalFormat = ValueFormat.getDecimalFormatEnglish("0.000");
 		String deltaRetentionTime = "";
 		if(retentionTime != null) {
-			if(preferenceStore.getBoolean(PreferenceSupplier.P_TARGETS_TABLE_SHOW_DEVIATION_RT)) {
+			if(settings.isShowDeviationRetentionTime()) {
 				int delta = libraryInformation.getRetentionTime() - retentionTime;
 				deltaRetentionTime = " [" + decimalFormat.format(delta / IChromatogramOverview.MINUTE_CORRELATION_FACTOR) + "]";
 			}
@@ -96,15 +99,15 @@ public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
 		return libraryRetentionTime + deltaRetentionTime;
 	}
 
-	public static String getRetentionIndexText(ILibraryInformation libraryInformation, Float retentionIndex) {
+	public static String getRetentionIndexText(ILibraryInformation libraryInformation, Float retentionIndex, ITargetsTableSettings settings) {
 
 		DecimalFormat decimalFormat = ValueFormat.getDecimalFormatEnglish("0.000");
 		DecimalFormat decimalFormatInteger = ValueFormat.getDecimalFormatEnglish("0");
-		boolean showRetentionIndexWithoutDecimals = org.eclipse.chemclipse.model.preferences.PreferenceSupplier.showRetentionIndexWithoutDecimals();
+		boolean showRetentionIndexWithoutDecimals = PreferenceSupplier.showRetentionIndexWithoutDecimals();
 
 		String deltaRetentionIndex = "";
 		if(retentionIndex != null) {
-			if(preferenceStore.getBoolean(PreferenceSupplier.P_TARGETS_TABLE_SHOW_DEVIATION_RI)) {
+			if(settings.isShowDeviationRetentionIndex()) {
 				float delta = libraryInformation.getRetentionIndex() - retentionIndex;
 				if(showRetentionIndexWithoutDecimals) {
 					deltaRetentionIndex = " [" + decimalFormatInteger.format(delta) + "]";
@@ -224,7 +227,7 @@ public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
 					/*
 					 * UUID or resolved name.
 					 */
-					if(PreferenceSupplier.isResolveDatabaseUUID()) {
+					if(settings.isResolveDatabaseUUID()) {
 						text = DatabaseResolver.getDatabaseName(libraryInformation.getDatabase());
 					} else {
 						text = libraryInformation.getDatabase();
@@ -240,10 +243,10 @@ public class TargetsLabelProvider extends AbstractChemClipseLabelProvider {
 					text = libraryInformation.getReferenceIdentifier();
 					break;
 				case RETENTION_TIME:
-					text = getRetentionTimeText(libraryInformation, null);
+					text = getRetentionTimeText(libraryInformation, null, settings);
 					break;
 				case RETENTION_INDEX:
-					text = getRetentionIndexText(libraryInformation, null);
+					text = getRetentionIndexText(libraryInformation, null, settings);
 					break;
 				case NCBI_TAXONOMY:
 					text = Integer.toString(libraryInformation.getTaxonomyIdentifierNCBI());

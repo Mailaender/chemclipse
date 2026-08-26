@@ -44,8 +44,10 @@ import org.eclipse.chemclipse.swt.ui.notifier.UpdateNotifierUI;
 import org.eclipse.chemclipse.swt.ui.preferences.PreferencePageSystem;
 import org.eclipse.chemclipse.ux.extension.ui.support.DataUpdateSupport;
 import org.eclipse.chemclipse.ux.extension.ui.swt.IExtendedPartUI;
+import org.eclipse.chemclipse.ux.extension.ui.targets.TargetsListUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.help.HelpContext;
+import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsTableSettingsXXD;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.l10n.ExtensionMessages;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.operations.DeleteTargetsOperation;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferencePageLists;
@@ -442,6 +444,7 @@ public class ExtendedTargetsUI extends Composite implements IExtendedPartUI {
 	private void createTargetTable(Composite parent, AtomicReference<TargetsListUI> listControl) {
 
 		TargetsListUI targetListUI = new TargetsListUI(parent, SWT.BORDER);
+		targetListUI.setSettings(new TargetsTableSettingsXXD());
 		targetListUI.setEditingSupport();
 		Table table = targetListUI.getTable();
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));

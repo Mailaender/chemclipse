@@ -114,6 +114,28 @@ public class ExtensionMessages extends NLS {
 	public static String process;
 	public static String selectProfile;
 
+	public static String advice;
+	public static String comments;
+	public static String contributor;
+	public static String database;
+	public static String databaseIndex;
+	public static String excactMass;
+	public static String formula;
+	public static String identifier;
+	public static String inLibFactor;
+	public static String matchFactor;
+	public static String matchFactorDirect;
+	public static String miscellaneous;
+	public static String molWeight;
+	public static String probability;
+	public static String rating;
+	public static String referenceID;
+	public static String retentionIndex;
+	public static String retentionTime;
+	public static String reverseMatchFactor;
+	public static String reverseMatchFactorDirect;
+	public static String verified;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ExtensionMessages.class);
 	}

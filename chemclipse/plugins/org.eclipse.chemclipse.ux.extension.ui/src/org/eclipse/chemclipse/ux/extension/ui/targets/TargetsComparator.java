@@ -11,7 +11,7 @@
  * Philip Wenig - initial API and implementation
  * Matthias Mailänder - sort by the metrics of the identification algorithm
  *******************************************************************************/
-package org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider;
+package org.eclipse.chemclipse.ux.extension.ui.targets;
 
 import java.util.OptionalDouble;
 

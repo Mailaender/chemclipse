@@ -10,9 +10,9 @@
  * Contributors:
  * Matthias Mailänder - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider;
+package org.eclipse.chemclipse.ux.extension.ui.targets;
 
-import org.eclipse.chemclipse.ux.extension.xxd.ui.l10n.ExtensionMessages;
+import org.eclipse.chemclipse.ux.extension.ui.l10n.ExtensionMessages;
 
 public enum TargetColumn {
 

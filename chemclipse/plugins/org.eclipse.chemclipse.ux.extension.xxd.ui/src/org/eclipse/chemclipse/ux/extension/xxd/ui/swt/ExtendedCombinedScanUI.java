@@ -47,8 +47,10 @@ import org.eclipse.chemclipse.swt.ui.components.InformationUI;
 import org.eclipse.chemclipse.swt.ui.notifier.UpdateNotifierUI;
 import org.eclipse.chemclipse.swt.ui.support.Colors;
 import org.eclipse.chemclipse.ux.extension.ui.swt.IExtendedPartUI;
+import org.eclipse.chemclipse.ux.extension.ui.targets.TargetsListUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.charts.ChartSupport;
+import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsTableSettingsXXD;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.l10n.ExtensionMessages;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferencePageScans;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferencePageSubtract;
@@ -253,6 +255,7 @@ public class ExtendedCombinedScanUI extends Composite implements IExtendedPartUI
 		tabItem.setControl(composite);
 
 		TargetsListUI targetsListUI = new TargetsListUI(composite, SWT.BORDER);
+		targetsListUI.setSettings(new TargetsTableSettingsXXD());
 		targetsListUI.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		targetsListUI.getControl().addMouseListener(new MouseAdapter() {
 

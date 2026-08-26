@@ -36,6 +36,7 @@ import org.eclipse.chemclipse.swt.ui.notifier.UpdateNotifierUI;
 import org.eclipse.chemclipse.ux.extension.msd.ui.Activator;
 import org.eclipse.chemclipse.ux.extension.ui.support.DataUpdateSupport;
 import org.eclipse.chemclipse.ux.extension.ui.swt.IExtendedPartUI;
+import org.eclipse.chemclipse.ux.extension.ui.targets.TargetsListUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -59,7 +60,7 @@ public class ExtendedMassSpectrumTargetsUI extends Composite implements IExtende
 	private AtomicReference<Button> buttonToolbarSearch = new AtomicReference<>();
 	private AtomicReference<SearchSupportUI> toolbarSearch = new AtomicReference<>();
 	private AtomicReference<Button> buttonDeleteTargetsControl = new AtomicReference<>();
-	private AtomicReference<MassSpectrumTargetsListUI> targetList = new AtomicReference<>();
+	private AtomicReference<TargetsListUI> targetList = new AtomicReference<>();
 
 	private Object cachedScan = null;
 
@@ -179,9 +180,9 @@ public class ExtendedMassSpectrumTargetsUI extends Composite implements IExtende
 		createTargetTable(composite, targetList);
 	}
 
-	private void createTargetTable(Composite parent, AtomicReference<MassSpectrumTargetsListUI> listControl) {
+	private void createTargetTable(Composite parent, AtomicReference<TargetsListUI> listControl) {
 
-		MassSpectrumTargetsListUI targetListUI = new MassSpectrumTargetsListUI(parent, SWT.BORDER);
+		TargetsListUI targetListUI = new TargetsListUI(parent, SWT.BORDER);
 		Table table = targetListUI.getTable();
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -345,7 +346,7 @@ public class ExtendedMassSpectrumTargetsUI extends Composite implements IExtende
 		updateWidgets();
 		updateInput();
 
-		MassSpectrumTargetsListUI targetListUI = targetList.get();
+		TargetsListUI targetListUI = targetList.get();
 		targetListUI.sortTable();
 		Table table = targetListUI.getTable();
 		if(table.getItemCount() > 0) {

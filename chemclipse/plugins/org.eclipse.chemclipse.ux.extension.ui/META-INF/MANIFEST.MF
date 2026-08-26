@@ -62,6 +62,7 @@ Export-Package: org.eclipse.chemclipse.ux.extension.ui.definitions,
  org.eclipse.chemclipse.ux.extension.ui.provider,
  org.eclipse.chemclipse.ux.extension.ui.support,
  org.eclipse.chemclipse.ux.extension.ui.swt,
+ org.eclipse.chemclipse.ux.extension.ui.targets,
  org.eclipse.chemclipse.ux.extension.ui.views
 Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",

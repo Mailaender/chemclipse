@@ -10,12 +10,11 @@
  * Contributors:
  * Philip Wenig - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider;
+package org.eclipse.chemclipse.ux.extension.ui.targets;
 
 import org.eclipse.chemclipse.model.identifier.IIdentificationTarget;
 import org.eclipse.chemclipse.support.events.IChemClipseEvents;
 import org.eclipse.chemclipse.swt.ui.notifier.UpdateNotifierUI;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.TargetsListUI;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;

@@ -30,12 +30,13 @@ import org.eclipse.chemclipse.support.ui.wizards.AbstractExtendedWizardPage;
 import org.eclipse.chemclipse.swt.ui.components.InformationUI;
 import org.eclipse.chemclipse.swt.ui.components.SearchSupportUI;
 import org.eclipse.chemclipse.ux.extension.ui.swt.IExtendedPartUI;
+import org.eclipse.chemclipse.ux.extension.ui.targets.TargetsListUI;
+import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.provider.TargetsTableSettingsXXD;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.ExtendedColumnIndicesUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.ExtendedFlavorMarkerUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.ExtendedLiteratureUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.ExtendedMoleculeUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.ExtendedSynonymsUI;
-import org.eclipse.chemclipse.ux.extension.xxd.ui.swt.TargetsListUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseAdapter;
@@ -212,6 +213,7 @@ public class PageLibrarySearch extends AbstractExtendedWizardPage implements IEx
 	private void createTargetList(Composite parent) {
 
 		TargetsListUI targetListUI = new TargetsListUI(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		targetListUI.setSettings(new TargetsTableSettingsXXD());
 		targetListUI.setComparator(true);
 		Table table = targetListUI.getTable();
 
