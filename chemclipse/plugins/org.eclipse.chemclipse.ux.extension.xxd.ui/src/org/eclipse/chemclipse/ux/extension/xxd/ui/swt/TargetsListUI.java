@@ -24,6 +24,7 @@ import org.eclipse.chemclipse.support.ui.swt.ExtendedTableViewer;
 import org.eclipse.chemclipse.support.ui.swt.IRecordTableComparator;
 import org.eclipse.chemclipse.support.updates.IUpdateListener;
 import org.eclipse.chemclipse.swt.ui.support.Colors;
+import org.eclipse.chemclipse.ux.extension.ui.provider.TargetColumn;
 import org.eclipse.chemclipse.ux.extension.ui.provider.TargetListFilter;
 import org.eclipse.chemclipse.ux.extension.ui.provider.TargetsColumns;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
@@ -95,6 +96,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 		super(parent, style | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 
 		createColumns(alternativeTitles, BOUNDS);
+		targetsColumns = TargetsColumns.create(null, TargetsLabelProvider.TRAILING_COLUMNS);
 		setLabelProvider(labelProvider); // order is important
 		setContentProvider(new ListContentProvider());
 		setComparator(false);
@@ -172,30 +174,23 @@ public class TargetsListUI extends ExtendedTableViewer {
 		editingSupport = true;
 		List<TableViewerColumn> tableViewerColumns = getTableViewerColumns();
 		for(int i = 0; i < tableViewerColumns.size(); i++) {
-			TableViewerColumn tableViewerColumn = tableViewerColumns.get(i);
-			String label = tableViewerColumn.getColumn().getText();
-			if(label.equals(TargetsLabelProvider.VERIFIED)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.NAME)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.CAS)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.COMMENTS)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.FORMULA)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.SMILES)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.INCHI)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.INCHI_KEY)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.CONTRIBUTOR)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
-			} else if(label.equals(TargetsLabelProvider.REFERENCE_ID)) {
-				tableViewerColumn.setEditingSupport(new TargetsEditingSupport(this, label));
+			TargetColumn targetColumn = targetsColumns.getColumn(i);
+			if(targetColumn != null && TargetsEditingSupport.EDITABLE_COLUMNS.contains(targetColumn)) {
+				tableViewerColumns.get(i).setEditingSupport(new TargetsEditingSupport(this, targetColumn));
 			}
 		}
+	}
+
+	private TableViewerColumn getTableViewerColumn(TargetColumn targetColumn) {
+
+		List<TableViewerColumn> tableViewerColumns = getTableViewerColumns();
+		for(int i = 0; i < tableViewerColumns.size(); i++) {
+			if(targetsColumns.getColumn(i) == targetColumn) {
+				return tableViewerColumns.get(i);
+			}
+		}
+
+		return null;
 	}
 
 	private void setCellColorProvider() {
@@ -206,7 +201,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 
 	private void setColorProviderRetentionTime() {
 
-		TableViewerColumn tableViewerColumn = getTableViewerColumn(TargetsLabelProvider.RETENTION_TIME);
+		TableViewerColumn tableViewerColumn = getTableViewerColumn(TargetColumn.RETENTION_TIME);
 		if(tableViewerColumn != null) {
 			tableViewerColumn.setLabelProvider(new StyledCellLabelProvider() {
 
@@ -260,7 +255,7 @@ public class TargetsListUI extends ExtendedTableViewer {
 
 	private void setColorProviderRetentionIndex() {
 
-		TableViewerColumn tableViewerColumn = getTableViewerColumn(TargetsLabelProvider.RETENTION_INDEX);
+		TableViewerColumn tableViewerColumn = getTableViewerColumn(TargetColumn.RETENTION_INDEX);
 		if(tableViewerColumn != null) {
 			tableViewerColumn.setLabelProvider(new StyledCellLabelProvider() {
 
