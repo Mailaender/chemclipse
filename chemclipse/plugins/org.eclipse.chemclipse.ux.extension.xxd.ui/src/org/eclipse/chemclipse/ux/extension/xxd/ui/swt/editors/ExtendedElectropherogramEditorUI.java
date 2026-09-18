@@ -88,10 +88,12 @@ import org.eclipse.chemclipse.ux.extension.ui.support.AuditTrailSupport;
 import org.eclipse.chemclipse.ux.extension.ui.support.PartSupport;
 import org.eclipse.chemclipse.ux.extension.ui.swt.IExtendedPartUI;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.Activator;
+import org.eclipse.chemclipse.ux.extension.xxd.ui.charts.ChartSupport;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.editors.EditorProcessTypeSupplier;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.help.HelpContext;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.charts.NucleotideLabelMarker;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.charts.TargetReferenceSettings;
+import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.editors.ScanNumberToCycleNumberFormat;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.internal.handlers.DynamicHandler;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.l10n.ExtensionMessages;
 import org.eclipse.chemclipse.ux.extension.xxd.ui.preferences.PreferencePage;
@@ -144,14 +146,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtchart.IAxis;
+import org.eclipse.swtchart.IAxis.Position;
 import org.eclipse.swtchart.ILineSeries.PlotSymbolType;
 import org.eclipse.swtchart.IPlotArea;
 import org.eclipse.swtchart.LineStyle;
+import org.eclipse.swtchart.extensions.axisconverter.PassThroughConverter;
 import org.eclipse.swtchart.extensions.core.BaseChart;
 import org.eclipse.swtchart.extensions.core.IChartSettings;
 import org.eclipse.swtchart.extensions.core.IPrimaryAxisSettings;
+import org.eclipse.swtchart.extensions.core.ISecondaryAxisSettings;
 import org.eclipse.swtchart.extensions.core.ISeriesData;
 import org.eclipse.swtchart.extensions.core.RangeRestriction;
+import org.eclipse.swtchart.extensions.core.SecondaryAxisSettings;
 import org.eclipse.swtchart.extensions.core.SeriesData;
 import org.eclipse.swtchart.extensions.linecharts.ILineSeriesData;
 import org.eclipse.swtchart.extensions.linecharts.ILineSeriesSettings;
@@ -1137,6 +1143,36 @@ public class ExtendedElectropherogramEditorUI extends Composite implements ITool
 		primaryAxisSettingsX.setGridLineStyle(LineStyle.NONE);
 		primaryAxisSettingsX.setTitleVisible(false);
 		primaryAxisSettingsX.setDecimalFormat(new DecimalFormat("0", ENGLISH_SYMBOLS));
+		adjustCycleAxisSettingsX(chartSettings);
+	}
+
+	private void adjustCycleAxisSettingsX(IChartSettings chartSettings) {
+
+		/*
+		 * The labels depend on the base calls, hence the axis is rebuilt instead of reused.
+		 */
+		ISecondaryAxisSettings cycleAxisSettings = ChartSupport.getSecondaryAxisSettingsX(ExtensionMessages.cycle, chartSettings);
+		if(cycleAxisSettings != null) {
+			chartSettings.getSecondaryAxisSettingsListX().remove(cycleAxisSettings);
+		}
+
+		if(chromatogramSelection == null) {
+			return;
+		}
+
+		/*
+		 * The axis keeps the scan numbers of the primary axis, only the labels are translated.
+		 * A scaling converter would place the cycles evenly, which the called bases are not.
+		 */
+		ScanNumberToCycleNumberFormat cycleNumberFormat = new ScanNumberToCycleNumberFormat(chromatogramSelection.getChromatogram());
+		if(cycleNumberFormat.hasCycleNumbers()) {
+			ISecondaryAxisSettings secondaryAxisSettingsX = new SecondaryAxisSettings(ExtensionMessages.cycle, new PassThroughConverter());
+			secondaryAxisSettingsX.setPosition(Position.Primary);
+			secondaryAxisSettingsX.setTitleVisible(true);
+			secondaryAxisSettingsX.setGridLineStyle(LineStyle.NONE);
+			secondaryAxisSettingsX.setDecimalFormat(cycleNumberFormat);
+			chartSettings.getSecondaryAxisSettingsListX().add(secondaryAxisSettingsX);
+		}
 	}
 
 	private void adjustAxisSettingsY(IChartSettings chartSettings) {

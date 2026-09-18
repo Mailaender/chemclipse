@@ -269,6 +269,7 @@ public class ExtensionMessages extends NLS {
 	public static String process;
 	public static String peak;
 	public static String scan;
+	public static String cycle;
 	// Chart
 	public static String relativeIntensity;
 	public static String ion;
